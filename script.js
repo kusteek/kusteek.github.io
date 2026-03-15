@@ -33,7 +33,6 @@ const translations = {
         nav_contact: 'Контакты',
         available: 'Доступен для работы',
         hello: 'Привет, я',
-        position: 'QA',
         description: 'Превращаю сложные баги в идеальный пользовательский опыт. Специализируюсь на обеспечении качества и тестировании.',
         contact_me: 'Связаться со мной',
         years: 'Года опыта',
@@ -90,7 +89,6 @@ const translations = {
         nav_contact: 'Contact',
         available: 'Available for work',
         hello: "Hi, I'm",
-        position: 'QA',
         description: 'Turning complex bugs into perfect user experience. Specializing in quality assurance and testing.',
         contact_me: 'Contact me',
         years: 'Years exp',
@@ -142,16 +140,13 @@ const translations = {
 };
 
 let currentLanguage = 'ru';
-let typedInterval;
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
     initializeTypedText();
     initializeSkills();
-    initializeParticles();
     initializeNavbar();
     initializeCopyButtons();
-    initializeTiltEffect();
     initializeThemeToggle();
     initializeLanguageToggle();
     applyTranslations();
@@ -160,7 +155,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'light') {
         document.body.classList.add('light-theme');
-        document.querySelector('#themeToggle i').className = 'fas fa-sun';
+        const icon = document.querySelector('#themeToggle i');
+        if (icon) icon.className = 'fas fa-sun';
     }
     
     const savedLanguage = localStorage.getItem('language');
@@ -172,7 +168,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // Печатающийся текст
 function initializeTypedText() {
     const typedTextElement = document.querySelector('.typed-text');
-    if (!typedTextElement) return;
+    const cursor = document.querySelector('.cursor');
+    if (!typedTextElement || !cursor) return;
     
     const words = {
         ru: ['Инженер', 'Тестировщик', 'Специалист'],
@@ -206,7 +203,6 @@ function initializeTypedText() {
         }
     }
 
-    if (typedInterval) clearInterval(typedInterval);
     type();
 }
 
@@ -215,39 +211,37 @@ function initializeSkills() {
     const skillsGrid = document.getElementById('skillsGrid');
     if (!skillsGrid) return;
 
-    skillsGrid.innerHTML = skillsData.map(skill => `
-        <div class="skill-item">
-            <div class="skill-name">
-                <i class="${skill.icon}"></i>
-                <span class="skill-name-text">${skill.name[currentLanguage]}</span>
+    skillsGrid.innerHTML = skillsData.map(skill => {
+        const name = skill.name[currentLanguage] || skill.name.ru;
+        return `
+            <div class="skill-item">
+                <div class="skill-name">
+                    <i class="${skill.icon}"></i>
+                    <span>${name}</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-progress" style="width: ${skill.level}%"></div>
+                </div>
             </div>
-            <div class="skill-bar">
-                <div class="skill-progress" style="width: ${skill.level}%"></div>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 // Переключение темы
 function initializeThemeToggle() {
     const themeToggle = document.getElementById('themeToggle');
+    if (!themeToggle) return;
+    
     const icon = themeToggle.querySelector('i');
     
     themeToggle.addEventListener('click', () => {
-        themeToggle.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            themeToggle.style.transform = 'scale(1)';
-        }, 200);
-        
         document.body.classList.toggle('light-theme');
         
         if (document.body.classList.contains('light-theme')) {
             icon.className = 'fas fa-sun';
-            icon.style.transform = 'rotate(180deg)';
             localStorage.setItem('theme', 'light');
         } else {
             icon.className = 'fas fa-moon';
-            icon.style.transform = 'rotate(0deg)';
             localStorage.setItem('theme', 'dark');
         }
     });
@@ -256,6 +250,7 @@ function initializeThemeToggle() {
 // Переключение языка
 function initializeLanguageToggle() {
     const langToggle = document.getElementById('languageToggle');
+    if (!langToggle) return;
     
     langToggle.addEventListener('click', () => {
         const newLang = currentLanguage === 'ru' ? 'en' : 'ru';
@@ -267,8 +262,10 @@ function setLanguage(lang) {
     currentLanguage = lang;
     
     const langToggle = document.getElementById('languageToggle');
-    const ruOption = langToggle.querySelector('.lang-ru');
-    const enOption = langToggle.querySelector('.lang-en');
+    const ruOption = document.querySelector('.lang-ru');
+    const enOption = document.querySelector('.lang-en');
+    
+    if (!langToggle || !ruOption || !enOption) return;
     
     if (lang === 'en') {
         langToggle.classList.add('en');
@@ -280,17 +277,14 @@ function setLanguage(lang) {
         ruOption.classList.add('active');
     }
     
-    langToggle.style.transform = 'scale(0.98)';
-    setTimeout(() => {
-        langToggle.style.transform = 'scale(1)';
-    }, 200);
-    
     applyTranslations();
     initializeSkills();
     
     const typedTextElement = document.querySelector('.typed-text');
-    typedTextElement.textContent = '';
-    initializeTypedText();
+    if (typedTextElement) {
+        typedTextElement.textContent = '';
+        initializeTypedText();
+    }
     
     localStorage.setItem('language', lang);
 }
@@ -302,10 +296,6 @@ function applyTranslations() {
     elements.forEach(element => {
         const key = element.getAttribute('data-i18n');
         if (translations[currentLanguage] && translations[currentLanguage][key]) {
-            element.style.animation = 'none';
-            element.offsetHeight;
-            element.style.animation = 'fadeIn 0.3s ease';
-            
             element.textContent = translations[currentLanguage][key];
         }
     });
@@ -318,59 +308,6 @@ function applyTranslations() {
     }
 }
 
-// Частицы фона
-function initializeParticles() {
-    const container = document.getElementById('particles');
-    if (!container) return;
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ alpha: true });
-    
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    container.appendChild(renderer.domElement);
-
-    const geometry = new THREE.BufferGeometry();
-    const vertices = [];
-
-    for (let i = 0; i < 2000; i++) {
-        const x = (Math.random() - 0.5) * 2000;
-        const y = (Math.random() - 0.5) * 2000;
-        const z = (Math.random() - 0.5) * 2000;
-        vertices.push(x, y, z);
-    }
-
-    geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-
-    const material = new THREE.PointsMaterial({
-        color: 0x6c5ce7,
-        size: 0.5,
-        transparent: true,
-        opacity: 0.3
-    });
-
-    const particles = new THREE.Points(geometry, material);
-    scene.add(particles);
-
-    camera.position.z = 500;
-
-    function animate() {
-        requestAnimationFrame(animate);
-        particles.rotation.x += 0.0001;
-        particles.rotation.y += 0.0001;
-        renderer.render(scene, camera);
-    }
-
-    animate();
-
-    window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-}
-
 // Навигация
 function initializeNavbar() {
     const navbar = document.querySelector('.navbar');
@@ -378,6 +315,8 @@ function initializeNavbar() {
     const sections = document.querySelectorAll('section');
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-links');
+
+    if (!navbar || !hamburger || !navMenu) return;
 
     window.addEventListener('scroll', () => {
         if (window.scrollY > 100) {
@@ -407,12 +346,10 @@ function initializeNavbar() {
         });
     });
 
-    if (hamburger) {
-        hamburger.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            hamburger.classList.toggle('active');
-        });
-    }
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
 
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
@@ -438,41 +375,14 @@ function initializeCopyButtons() {
     
     copyBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            const textToCopy = btn.dataset.copy;
+            const textToCopy = btn.getAttribute('data-copy');
+            if (!textToCopy) return;
             
             navigator.clipboard.writeText(textToCopy).then(() => {
                 showNotification(currentLanguage === 'ru' ? 'Скопировано!' : 'Copied!');
-                
-                btn.style.transform = 'scale(1.2)';
-                setTimeout(() => {
-                    btn.style.transform = 'scale(1)';
-                }, 200);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
             });
-        });
-    });
-}
-
-// Эффект наклона
-function initializeTiltEffect() {
-    const cards = document.querySelectorAll('[data-tilt]');
-    
-    cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            const rotateX = (y - centerY) / 25;
-            const rotateY = (centerX - x) / 25;
-            
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-        });
-        
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
         });
     });
 }
@@ -486,25 +396,6 @@ function showNotification(message) {
     document.body.appendChild(notification);
     
     setTimeout(() => {
-        notification.style.animation = 'slideOutRight 0.3s ease';
-        setTimeout(() => {
-            notification.remove();
-        }, 300);
+        notification.remove();
     }, 3000);
 }
-
-// Добавляем стили для уведомлений
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideOutRight {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(style);
