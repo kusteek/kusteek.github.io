@@ -1,480 +1,1104 @@
-// Данные пользователя
-const userData = {
-    name: 'Клёк Артём',
-    location: 'Новосибирск',
-    telegram: '@kusteeek',
-    email: 'lol.kleka2000@mail.ru',
-    experience: 2
-};
-
-// Навыки для отображения
-const skillsData = [
-    { name: { ru: 'Функциональное тестирование', en: 'Functional Testing' }, level: 90, icon: 'fas fa-vial' },
-    { name: { ru: 'Регрессионное тестирование', en: 'Regression Testing' }, level: 90, icon: 'fas fa-rotate' },
-    { name: { ru: 'Интеграционное тестирование', en: 'Integration Testing' }, level: 85, icon: 'fas fa-link' },
-    { name: { ru: 'Smoke тестирование', en: 'Smoke Testing' }, level: 95, icon: 'fas fa-fire' },
-    { name: { ru: 'Jira', en: 'Jira' }, level: 90, icon: 'fab fa-jira' },
-    { name: { ru: 'TestRail', en: 'TestRail' }, level: 85, icon: 'fas fa-tasks' },
-    { name: { ru: 'Postman', en: 'Postman' }, level: 80, icon: 'fas fa-plug' },
-    { name: { ru: 'SQL', en: 'SQL' }, level: 75, icon: 'fas fa-database' },
-    { name: { ru: 'Git', en: 'Git' }, level: 70, icon: 'fab fa-git-alt' },
-    { name: { ru: 'Тест-дизайн', en: 'Test Design' }, level: 85, icon: 'fas fa-pencil-ruler' },
-    { name: { ru: 'Управление дефектами', en: 'Bug Tracking' }, level: 90, icon: 'fas fa-bug' },
-    { name: { ru: 'SDLC', en: 'SDLC' }, level: 85, icon: 'fas fa-code-branch' }
-];
-
-// Переводы
-const translations = {
-    ru: {
-        nav_home: 'Главная',
-        nav_about: 'Обо мне',
-        nav_skills: 'Навыки',
-        nav_experience: 'Опыт',
-        nav_contact: 'Контакты',
-        available: 'Доступен для работы',
-        hello: 'Привет, я',
-        description: 'Превращаю сложные баги в идеальный пользовательский опыт. Специализируюсь на обеспечении качества и тестировании.',
-        contact_me: 'Связаться со мной',
-        years: 'Года опыта',
-        bugs: '+ багов',
-        projects: 'проектов',
-        bug_hunter: 'Bug Hunter',
-        qa_engineer: 'QA Engineer',
-        quality: 'Quality',
-        who_i_am: 'Кто я',
-        about_me: 'Обо мне',
-        about_highlight: 'QA-инженер с фокусом на обеспечение качества и тестирование программного обеспечения',
-        about_text: 'За 2 года работы в IT участвовал в тестировании различных проектов, от стартапов до крупных банковских систем. Специализируюсь на функциональном, регрессионном и интеграционном тестировании. Постоянно развиваюсь и применяю лучшие практики в работе.',
-        feature_1: 'Опыт работы с банковскими системами',
-        feature_2: 'Участие в ПСИ с заказчиками',
-        feature_3: 'Знание SDLC и методологий разработки',
-        location: 'Локация',
-        languages: 'Языки',
-        russian: 'Русский',
-        english: 'English',
-        interests: 'Интересы',
-        interest_1: 'Тестирование',
-        interest_2: 'Качество ПО',
-        interest_3: 'Автоматизация',
-        what_i_can: 'Что я умею',
-        skills: 'Навыки',
-        career_path: 'Карьерный путь',
-        experience: 'Опыт работы',
-        vtb_1: 'Проектирование и планирование процессов тестирования, включая разработку тестовой стратегии, подготовку тест-планов, тест-кейсов и чек-листов',
-        vtb_2: 'Выполнение комплексного тестирования ПО: функционального, регрессионного, smoke, интеграционного, повторное тестирование дефектов',
-        vtb_3: 'Управление дефектами: регистрация, приоритизация, отслеживание статусов багов и контроль качества продукта',
-        vtb_4: 'Работа с тестовыми данными и поддержка тестового окружения, подготовка конфигураций и сценариев',
-        vtb_5: 'Подготовка отчётности, анализ проблем, оценка рисков и формирование рекомендаций по улучшению качества',
-        vtb_6: 'Интеграция процессов тестирования в SDLC, взаимодействие с разработчиками, аналитиками и менеджерами',
-        vtb_7: 'Участие в демонстрациях функционала заказчику (ПСИ), подготовка сценариев и сопровождение приемочного тестирования',
-        vtb_8: 'Участие в улучшении процессов тестирования, оптимизация тестовых сценариев, внедрение новых практик контроля качества',
-        neoflex_1: 'Проектирование и планирование тестирования',
-        neoflex_2: 'Выполнение комплексного тестирования (функциональное, регрессионное, smoke и т.д.)',
-        neoflex_3: 'Управление дефектами и отслеживание качества',
-        neoflex_4: 'Работа с тестовыми данными и тестовым окружением',
-        neoflex_5: 'Отчётность и анализ результатов тестирования',
-        neoflex_6: 'Интеграция в процессы разработки',
-        neoflex_7: 'Демонстрация функционала заказчику (ПСИ)',
-        get_in_touch: 'Свяжитесь со мной',
-        contacts: 'Контакты',
-        online: 'online',
-        qa_engineer_footer: 'QA Инженер'
-    },
-    en: {
-        nav_home: 'Home',
-        nav_about: 'About',
-        nav_skills: 'Skills',
-        nav_experience: 'Experience',
-        nav_contact: 'Contact',
-        available: 'Available for work',
-        hello: "Hi, I'm",
-        description: 'Turning complex bugs into perfect user experience. Specializing in quality assurance and testing.',
-        contact_me: 'Contact me',
-        years: 'Years exp',
-        bugs: '+ bugs',
-        projects: 'projects',
-        bug_hunter: 'Bug Hunter',
-        qa_engineer: 'QA Engineer',
-        quality: 'Quality',
-        who_i_am: 'Who I am',
-        about_me: 'About me',
-        about_highlight: 'QA Engineer focused on quality assurance and software testing',
-        about_text: 'In 2 years in IT, I participated in testing various projects, from startups to large banking systems. I specialize in functional, regression and integration testing. Constantly improving and applying best practices.',
-        feature_1: 'Experience with banking systems',
-        feature_2: 'Participation in UAT with clients',
-        feature_3: 'Knowledge of SDLC and development methodologies',
-        location: 'Location',
-        languages: 'Languages',
-        russian: 'Russian',
-        english: 'English',
-        interests: 'Interests',
-        interest_1: 'Testing',
-        interest_2: 'Quality',
-        interest_3: 'Automation',
-        what_i_can: 'What I can do',
-        skills: 'Skills',
-        career_path: 'Career path',
-        experience: 'Experience',
-        vtb_1: 'Design and planning of testing processes, including test strategy development, test plans, test cases and checklists',
-        vtb_2: 'Comprehensive software testing: functional, regression, smoke, integration, defect retesting',
-        vtb_3: 'Defect management: registration, prioritization, bug status tracking and product quality control',
-        vtb_4: 'Test data management and test environment support, configuration and scenario preparation',
-        vtb_5: 'Reporting, problem analysis, risk assessment and quality improvement recommendations',
-        vtb_6: 'Integration of testing processes into SDLC, interaction with developers, analysts and managers',
-        vtb_7: 'Participation in functionality demos to the customer (UAT), scenario preparation and acceptance testing support',
-        vtb_8: 'Participation in improving testing processes, optimization of test scenarios, implementation of new quality control practices',
-        neoflex_1: 'Test design and planning',
-        neoflex_2: 'Comprehensive testing (functional, regression, smoke, etc.)',
-        neoflex_3: 'Defect management and quality tracking',
-        neoflex_4: 'Test data and test environment management',
-        neoflex_5: 'Reporting and test results analysis',
-        neoflex_6: 'Integration into development processes',
-        neoflex_7: 'Functionality demonstration to the customer (UAT)',
-        get_in_touch: 'Get in touch',
-        contacts: 'Contacts',
-        online: 'online',
-        qa_engineer_footer: 'QA Engineer'
-    }
-};
-
-let currentLanguage = 'ru';
-let typedInterval;
-
-// Инициализация при загрузке страницы
-document.addEventListener('DOMContentLoaded', function() {
-    initializeParticles();
-    initializeTypedText();
-    initializeSkills();
-    initializeNavbar();
-    initializeCopyButtons();
-    initializeThemeToggle();
-    initializeLanguageToggle();
-    applyTranslations();
-    
-    // Проверяем сохраненные настройки
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-        document.body.classList.add('light-theme');
-        const icon = document.querySelector('#themeToggle i');
-        if (icon) icon.className = 'fas fa-sun';
-    }
-    
-    const savedLanguage = localStorage.getItem('language');
-    if (savedLanguage && savedLanguage !== currentLanguage) {
-        setLanguage(savedLanguage);
-    }
-});
-
-// Частицы на canvas
-function initializeParticles() {
-    const canvas = document.getElementById('particles-canvas');
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-    
-    class Particle {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2 + 1;
-            this.speedX = Math.random() * 0.5 - 0.25;
-            this.speedY = Math.random() * 0.5 - 0.25;
-            this.color = `rgba(108, 92, 231, ${Math.random() * 0.3 + 0.2})`;
-        }
-        
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-            
-            if (this.x > canvas.width) this.x = 0;
-            if (this.x < 0) this.x = canvas.width;
-            if (this.y > canvas.height) this.y = 0;
-            if (this.y < 0) this.y = canvas.height;
-        }
-        
-        draw() {
-            ctx.fillStyle = this.color;
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
-        }
-    }
-    
-    function init() {
-        particles = [];
-        for (let i = 0; i < 100; i++) {
-            particles.push(new Particle());
-        }
-    }
-    
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        particles.forEach(particle => {
-            particle.update();
-            particle.draw();
-        });
-        
-        requestAnimationFrame(animate);
-    }
-    
-    init();
-    animate();
+:root {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #111111;
+    --bg-card: #1a1a1a;
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+    --accent-primary: #6c5ce7;
+    --accent-secondary: #a463f5;
+    --accent-glow: rgba(108, 92, 231, 0.3);
+    --gradient-1: linear-gradient(135deg, #6c5ce7, #a463f5);
+    --gradient-2: linear-gradient(135deg, #00d2ff, #3a7bd5);
+    --gradient-3: linear-gradient(135deg, #fa709a, #fee140);
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    --glow: 0 0 20px var(--accent-glow);
 }
 
-// Печатающийся текст
-function initializeTypedText() {
-    const typedTextElement = document.querySelector('.typed-text');
-    if (!typedTextElement) return;
-    
-    const words = {
-        ru: ['Инженер', 'Тестировщик', 'Специалист'],
-        en: ['Engineer', 'Tester', 'Specialist']
-    };
-    let wordIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    function type() {
-        const currentWords = words[currentLanguage];
-        const currentWord = currentWords[wordIndex];
-        
-        if (isDeleting) {
-            typedTextElement.textContent = currentWord.substring(0, charIndex - 1);
-            charIndex--;
-        } else {
-            typedTextElement.textContent = currentWord.substring(0, charIndex + 1);
-            charIndex++;
-        }
+html {
+    scroll-behavior: smooth;
+}
 
-        if (!isDeleting && charIndex === currentWord.length) {
-            isDeleting = true;
-            setTimeout(type, 2000);
-        } else if (isDeleting && charIndex === 0) {
-            isDeleting = false;
-            wordIndex = (wordIndex + 1) % currentWords.length;
-            setTimeout(type, 500);
-        } else {
-            setTimeout(type, 100);
-        }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background-color 0.5s ease, color 0.3s ease;
+    position: relative;
+}
+
+/* Canvas для частиц */
+#particles-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Навигация */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.glitch {
+    position: relative;
+    color: var(--text-primary);
+    animation: glitch 3s infinite;
+}
+
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glitch::before {
+    animation: glitch-top 0.3s infinite;
+    color: #ff00ff;
+    z-index: -1;
+}
+
+.glitch::after {
+    animation: glitch-bottom 0.3s infinite;
+    color: #00ffff;
+    z-index: -2;
+}
+
+.dot {
+    color: var(--accent-primary);
+    animation: pulse 2s infinite;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gradient-1);
+    transition: width 0.3s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--text-primary);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+/* Контролы */
+.controls-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0 1rem;
+}
+
+/* Переключатель темы */
+.theme-toggle {
+    position: relative;
+    width: 60px;
+    height: 30px;
+    background: var(--bg-card);
+    border-radius: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.theme-toggle i {
+    font-size: 1rem;
+    z-index: 2;
+    transition: all 0.3s ease;
+    color: var(--text-secondary);
+}
+
+.theme-toggle .fa-moon {
+    color: #6c5ce7;
+}
+
+.theme-toggle .fa-sun {
+    color: #f39c12;
+}
+
+.toggle-bg {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: var(--gradient-1);
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 1;
+    opacity: 0.5;
+}
+
+/* Переключатель языка */
+.language-toggle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--bg-card);
+    border-radius: 30px;
+    padding: 3px;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: 90px;
+    height: 36px;
+    transition: all 0.3s ease;
+}
+
+.language-slider {
+    position: absolute;
+    width: 42px;
+    height: 30px;
+    background: var(--gradient-1);
+    border-radius: 30px;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 1;
+    opacity: 0.8;
+    box-shadow: 0 2px 10px var(--accent-glow);
+    animation: slidePulse 2s infinite;
+}
+
+.language-toggle.en .language-slider {
+    transform: translateX(42px);
+}
+
+.lang-option {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+    padding: 5px 0;
+    user-select: none;
+}
+
+.lang-option.active {
+    color: white;
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background: var(--text-primary);
+    margin: 2px 0;
+    transition: 0.3s;
+}
+
+/* Hero секция */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-content {
+    flex: 1;
+}
+
+.hero-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(108, 92, 231, 0.1);
+    border: 1px solid var(--accent-primary);
+    border-radius: 50px;
+    color: var(--accent-primary);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    animation: pulse 2s infinite;
+}
+
+.hero-title {
+    font-size: 4rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+.reveal-text {
+    display: block;
+    font-size: 2rem;
+    color: var(--text-secondary);
+    animation: reveal 1s ease-out;
+}
+
+.gradient-text {
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-subtitle {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-secondary);
+}
+
+.typed-text {
+    color: var(--accent-primary);
+}
+
+.cursor {
+    display: inline-block;
+    width: 3px;
+    background-color: var(--accent-primary);
+    animation: blink 1s infinite;
+}
+
+.hero-description {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin-bottom: 2rem;
+}
+
+.hero-cta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+.btn {
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: var(--gradient-1);
+    color: white;
+    box-shadow: var(--glow);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px var(--accent-glow);
+}
+
+.hero-stats {
+    display: flex;
+    gap: 3rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-label {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.hero-image {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-circle {
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: var(--gradient-1);
+    padding: 5px;
+    animation: float 6s ease-in-out infinite;
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.floating-card {
+    position: absolute;
+    background: var(--bg-card);
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    box-shadow: var(--shadow);
+    animation: float 4s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 2;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.floating-card i {
+    color: var(--accent-primary);
+}
+
+.card-2 {
+    top: 20%;
+    right: 0;
+    animation-delay: 1s;
+}
+
+.card-3 {
+    bottom: 20%;
+    left: 0;
+    animation-delay: 2s;
+}
+
+/* Секции общие */
+section {
+    padding: 5rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    transition: background-color 0.5s ease;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.section-subtitle {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(108, 92, 231, 0.1);
+    border-radius: 50px;
+    color: var(--accent-primary);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* About секция */
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+}
+
+.highlight-text {
+    font-size: 1.3rem;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+}
+
+.about-features {
+    margin-top: 2rem;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.feature i {
+    color: var(--accent-primary);
+}
+
+.about-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.info-card {
+    background: var(--bg-card);
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.info-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--accent-primary);
+    box-shadow: var(--glow);
+}
+
+.info-card i {
+    font-size: 2rem;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+}
+
+/* Skills секция */
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.skill-item {
+    background: var(--bg-card);
+    padding: 1.5rem;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.skill-item:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-primary);
+}
+
+.skill-name {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.skill-name i {
+    font-size: 1.5rem;
+    color: var(--accent-primary);
+}
+
+.skill-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.skill-progress {
+    height: 100%;
+    background: var(--gradient-1);
+    border-radius: 4px;
+    transition: width 1s ease;
+}
+
+/* Опыт работы */
+.timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 100%;
+    background: var(--gradient-1);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 3rem;
+    animation: fadeInUp 0.6s ease backwards;
+}
+
+.timeline-item:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.timeline-item:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--gradient-1);
+    box-shadow: var(--glow);
+}
+
+.timeline-date {
+    position: absolute;
+    left: calc(50% + 2rem);
+    top: 0;
+    color: var(--accent-primary);
+    font-weight: bold;
+}
+
+.timeline-content {
+    width: calc(50% - 3rem);
+    margin-left: auto;
+    background: var(--bg-card);
+    padding: 2rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.timeline-content:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--glow);
+    border-color: var(--accent-primary);
+}
+
+.timeline-item:nth-child(even) .timeline-content {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.timeline-item:nth-child(even) .timeline-date {
+    left: auto;
+    right: calc(50% + 2rem);
+}
+
+.timeline-content h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+}
+
+.timeline-content h4 {
+    color: var(--accent-primary);
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.experience-list {
+    list-style: none;
+    margin: 1rem 0;
+}
+
+.experience-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.experience-list li i {
+    color: var(--accent-primary);
+    font-size: 1rem;
+    margin-top: 0.2rem;
+    flex-shrink: 0;
+}
+
+.tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tech-tags span {
+    padding: 0.4rem 1rem;
+    background: rgba(108, 92, 231, 0.15);
+    border-radius: 50px;
+    font-size: 0.85rem;
+    color: var(--accent-primary);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.tech-tags span:hover {
+    background: var(--gradient-1);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Контакты */
+.contact-content {
+    display: flex;
+    justify-content: center;
+}
+
+.contact-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.contact-card {
+    background: var(--bg-card);
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-primary);
+    box-shadow: var(--glow);
+}
+
+.contact-card i {
+    font-size: 2rem;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+}
+
+.contact-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.contact-card a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.3s;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.contact-card a:hover {
+    color: var(--accent-primary);
+}
+
+.copy-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.copy-btn:hover {
+    color: var(--accent-primary);
+    transform: scale(1.1);
+}
+
+.status {
+    display: inline-block;
+    padding: 0.2rem 0.8rem;
+    background: rgba(0, 255, 0, 0.1);
+    color: #00ff00;
+    border-radius: 50px;
+    font-size: 0.8rem;
+}
+
+.stats {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+/* Footer */
+footer {
+    background: var(--bg-secondary);
+    padding: 2rem;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background-color 0.5s ease, border-color 0.3s ease;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Анимации */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes glitch {
+    2%, 64% { transform: translate(2px,0) skew(0deg); }
+    4%, 60% { transform: translate(-2px,0) skew(0deg); }
+    62% { transform: translate(0,0) skew(5deg); }
+}
+
+@keyframes glitch-top {
+    2%,64% { transform: translate(2px,-2px); }
+    4%,60% { transform: translate(-2px,2px); }
+    62% { transform: translate(13px,-1px) skew(-13deg); }
+}
+
+@keyframes glitch-bottom {
+    2%,64% { transform: translate(-2px,0); }
+    4%,60% { transform: translate(2px,0); }
+    62% { transform: translate(-13px,1px) skew(13deg); }
+}
+
+@keyframes reveal {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes blink {
+    0%,50% { opacity: 1; }
+    51%,100% { opacity: 0; }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slidePulse {
+    0% { box-shadow: 0 0 5px var(--accent-glow); }
+    50% { box-shadow: 0 0 15px var(--accent-glow); }
+    100% { box-shadow: 0 0 5px var(--accent-glow); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0.5; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes buttonPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.theme-toggle:active,
+.language-toggle:active {
+    animation: buttonPop 0.2s ease;
+}
+
+.theme-toggle:hover,
+.language-toggle:hover {
+    transform: scale(1.05);
+    box-shadow: var(--glow);
+}
+
+[data-i18n] {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Светлая тема */
+body.light-theme {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f0f2f5;
+    --bg-card: #f8f9fa;
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --accent-glow: rgba(108, 92, 231, 0.2);
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .navbar {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .nav-link {
+    color: #4a4a4a;
+}
+
+body.light-theme .nav-link:hover,
+body.light-theme .nav-link.active {
+    color: var(--accent-primary);
+}
+
+body.light-theme .theme-toggle,
+body.light-theme .language-toggle {
+    background: #e9ecef;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .toggle-bg {
+    transform: translateX(30px);
+}
+
+body.light-theme .contact-card,
+body.light-theme .info-card,
+body.light-theme .timeline-content,
+body.light-theme .skill-item,
+body.light-theme .floating-card {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .tech-tags {
+    border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .tech-tags span {
+    background: rgba(108, 92, 231, 0.1);
+    color: var(--accent-primary);
+}
+
+body.light-theme footer {
+    background: #f0f2f5;
+    border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .hero-badge {
+    background: rgba(108, 92, 231, 0.1);
+}
+
+body.light-theme .hero-description,
+body.light-theme .stat-label,
+body.light-theme .experience-list li {
+    color: #4a4a4a;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .hero-title { font-size: 3rem; }
+    .profile-circle { width: 300px; height: 300px; }
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: var(--bg-primary);
+        padding: 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        flex-direction: column;
+        align-items: center;
     }
-
-    if (typedInterval) clearInterval(typedInterval);
-    type();
-}
-
-// Инициализация навыков
-function initializeSkills() {
-    const skillsGrid = document.getElementById('skillsGrid');
-    if (!skillsGrid) return;
-
-    skillsGrid.innerHTML = skillsData.map(skill => {
-        const name = skill.name[currentLanguage] || skill.name.ru;
-        return `
-            <div class="skill-item">
-                <div class="skill-name">
-                    <i class="${skill.icon}"></i>
-                    <span>${name}</span>
-                </div>
-                <div class="skill-bar">
-                    <div class="skill-progress" style="width: ${skill.level}%"></div>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
-
-// Переключение темы
-function initializeThemeToggle() {
-    const themeToggle = document.getElementById('themeToggle');
-    if (!themeToggle) return;
     
-    const icon = themeToggle.querySelector('i');
+    .nav-links.active { display: flex; }
     
-    themeToggle.addEventListener('click', () => {
-        themeToggle.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            themeToggle.style.transform = 'scale(1)';
-        }, 200);
-        
-        document.body.classList.toggle('light-theme');
-        
-        if (document.body.classList.contains('light-theme')) {
-            icon.className = 'fas fa-sun';
-            localStorage.setItem('theme', 'light');
-        } else {
-            icon.className = 'fas fa-moon';
-            localStorage.setItem('theme', 'dark');
-        }
-    });
-}
-
-// Переключение языка
-function initializeLanguageToggle() {
-    const langToggle = document.getElementById('languageToggle');
-    if (!langToggle) return;
-    
-    langToggle.addEventListener('click', () => {
-        const newLang = currentLanguage === 'ru' ? 'en' : 'ru';
-        setLanguage(newLang);
-    });
-}
-
-function setLanguage(lang) {
-    currentLanguage = lang;
-    
-    const langToggle = document.getElementById('languageToggle');
-    const ruOption = document.querySelector('.lang-ru');
-    const enOption = document.querySelector('.lang-en');
-    
-    if (langToggle && ruOption && enOption) {
-        if (lang === 'en') {
-            langToggle.classList.add('en');
-            ruOption.classList.remove('active');
-            enOption.classList.add('active');
-        } else {
-            langToggle.classList.remove('en');
-            enOption.classList.remove('active');
-            ruOption.classList.add('active');
-        }
+    .hamburger {
+        display: flex;
     }
     
-    applyTranslations();
-    initializeSkills();
-    
-    const typedTextElement = document.querySelector('.typed-text');
-    if (typedTextElement) {
-        typedTextElement.textContent = '';
-        initializeTypedText();
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
     }
     
-    localStorage.setItem('language', lang);
-}
-
-// Применение переводов
-function applyTranslations() {
-    const elements = document.querySelectorAll('[data-i18n]');
-    
-    elements.forEach(element => {
-        const key = element.getAttribute('data-i18n');
-        if (translations[currentLanguage] && translations[currentLanguage][key]) {
-            element.textContent = translations[currentLanguage][key];
-        }
-    });
-    
-    const floatingCards = document.querySelectorAll('.floating-card span');
-    if (floatingCards.length >= 3) {
-        floatingCards[0].textContent = translations[currentLanguage].bug_hunter;
-        floatingCards[1].textContent = translations[currentLanguage].qa_engineer;
-        floatingCards[2].textContent = translations[currentLanguage].quality;
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
     }
-}
-
-// Навигация
-function initializeNavbar() {
-    const navbar = document.querySelector('.navbar');
-    const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('section');
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-links');
-
-    if (!navbar || !hamburger || !navMenu) return;
-
-    window.addEventListener('scroll', () => {
-        let current = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop - 100;
-            const sectionHeight = section.clientHeight;
-            if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${current}`) {
-                link.classList.add('active');
-            }
-        });
-    });
-
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-    });
-
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = link.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
-            
-            if (targetSection) {
-                targetSection.scrollIntoView({ behavior: 'smooth' });
-                
-                if (navMenu.classList.contains('active')) {
-                    navMenu.classList.remove('active');
-                    hamburger.classList.remove('active');
-                }
-            }
-        });
-    });
-}
-
-// Кнопки копирования
-function initializeCopyButtons() {
-    const copyBtns = document.querySelectorAll('.copy-btn');
     
-    copyBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const textToCopy = btn.getAttribute('data-copy');
-            if (!textToCopy) return;
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                showNotification(currentLanguage === 'ru' ? 'Скопировано!' : 'Copied!');
-                
-                btn.style.transform = 'scale(1.2)';
-                setTimeout(() => {
-                    btn.style.transform = 'scale(1)';
-                }, 200);
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-            });
-        });
-    });
-}
-
-// Уведомления
-function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.textContent = message;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.animation = 'slideOutRight 0.3s ease';
-        setTimeout(() => {
-            notification.remove();
-        }, 300);
-    }, 3000);
-}
-
-// Добавляем стили для уведомлений
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideOutRight {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
     }
-`;
-document.head.appendChild(style);
+    
+    .controls-wrapper {
+        margin: 0 0.5rem;
+        gap: 0.5rem;
+    }
+    
+    .theme-toggle {
+        width: 50px;
+        height: 26px;
+    }
+    
+    .theme-toggle i { font-size: 0.85rem; }
+    .toggle-bg { width: 20px; height: 20px; }
+    body.light-theme .toggle-bg { transform: translateX(24px); }
+    
+    .language-toggle {
+        min-width: 70px;
+        height: 30px;
+    }
+    
+    .language-slider {
+        width: 32px;
+        height: 24px;
+    }
+    
+    .language-toggle.en .language-slider {
+        transform: translateX(32px);
+    }
+    
+    .lang-option { font-size: 0.75rem; }
+    
+    .hero {
+        flex-direction: column;
+        text-align: center;
+        padding-top: 5rem;
+    }
+    
+    .hero-content { margin-bottom: 3rem; }
+    .hero-cta { justify-content: center; }
+    .hero-stats { justify-content: center; }
+    .profile-circle { width: 250px; height: 250px; }
+    .about-content { grid-template-columns: 1fr; }
+    .about-cards { grid-template-columns: 1fr; }
+    .contact-info { grid-template-columns: 1fr; }
+    
+    .timeline::before { left: 20px; }
+    .timeline-dot { left: 20px; }
+    .timeline-date { 
+        left: 50px; 
+        top: -20px; 
+        font-size: 0.9rem; 
+    }
+    .timeline-content { 
+        width: calc(100% - 50px); 
+        margin-left: 50px; 
+    }
+    .timeline-item:nth-child(even) .timeline-content {
+        margin-left: 50px;
+    }
+    .timeline-item:nth-child(even) .timeline-date {
+        left: 50px;
+        right: auto;
+    }
+    .floating-card { display: none; }
+}
+
+@media (max-width: 480px) {
+    .hero-title { font-size: 2rem; }
+    .hero-subtitle { font-size: 1.5rem; }
+    .hero-cta { flex-direction: column; }
+    .hero-stats { flex-direction: column; gap: 1rem; }
+    .section-title { font-size: 2rem; }
+}
+
+/* Уведомления */
+.notification {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #00b09b, #96c93d);
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 9999;
+    animation: slideInRight 0.3s ease;
+}
