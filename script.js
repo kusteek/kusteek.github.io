@@ -37,7 +37,7 @@ const translations = {
         contact_me: 'Связаться со мной',
         years: 'Года опыта',
         bugs: '+ багов',
-        projects: 'проектов',
+        projects: 'проекта',
         bug_hunter: 'Bug Hunter',
         qa_engineer: 'QA Engineer',
         quality: 'Quality',
@@ -138,7 +138,6 @@ const translations = {
 };
 
 let currentLanguage = 'ru';
-let typedInterval;
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
@@ -146,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeTypedText();
     initializeSkills();
     initializeNavbar();
-    initializeCopyButtons();
     initializeThemeToggle();
     initializeLanguageToggle();
     applyTranslations();
@@ -164,6 +162,15 @@ document.addEventListener('DOMContentLoaded', function() {
         setLanguage(savedLanguage);
     }
 });
+
+// Функция для копирования в буфер обмена
+window.copyToClipboard = function(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification(currentLanguage === 'ru' ? 'Скопировано!' : 'Copied!');
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+    });
+};
 
 // Частицы на canvas
 function initializeParticles() {
@@ -186,9 +193,9 @@ function initializeParticles() {
             this.x = Math.random() * canvas.width;
             this.y = Math.random() * canvas.height;
             this.size = Math.random() * 2 + 1;
-            this.speedX = Math.random() * 0.5 - 0.25;
-            this.speedY = Math.random() * 0.5 - 0.25;
-            this.color = `rgba(108, 92, 231, ${Math.random() * 0.3 + 0.2})`;
+            this.speedX = Math.random() * 0.3 - 0.15;
+            this.speedY = Math.random() * 0.3 - 0.15;
+            this.color = `rgba(108, 92, 231, ${Math.random() * 0.2 + 0.1})`;
         }
         
         update() {
@@ -211,7 +218,7 @@ function initializeParticles() {
     
     function init() {
         particles = [];
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 50; i++) {
             particles.push(new Particle());
         }
     }
@@ -268,7 +275,6 @@ function initializeTypedText() {
         }
     }
 
-    if (typedInterval) clearInterval(typedInterval);
     type();
 }
 
@@ -381,13 +387,12 @@ function applyTranslations() {
 
 // Навигация
 function initializeNavbar() {
-    const navbar = document.querySelector('.navbar');
     const navLinks = document.querySelectorAll('.nav-link');
     const sections = document.querySelectorAll('section');
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-links');
 
-    if (!navbar || !hamburger || !navMenu) return;
+    if (!hamburger || !navMenu) return;
 
     window.addEventListener('scroll', () => {
         let current = '';
@@ -430,29 +435,6 @@ function initializeNavbar() {
     });
 }
 
-// Кнопки копирования
-function initializeCopyButtons() {
-    const copyBtns = document.querySelectorAll('.copy-btn');
-    
-    copyBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const textToCopy = btn.getAttribute('data-copy');
-            if (!textToCopy) return;
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                showNotification(currentLanguage === 'ru' ? 'Скопировано!' : 'Copied!');
-                
-                btn.style.transform = 'scale(1.2)';
-                setTimeout(() => {
-                    btn.style.transform = 'scale(1)';
-                }, 200);
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-            });
-        });
-    });
-}
-
 // Уведомления
 function showNotification(message) {
     const notification = document.createElement('div');
@@ -468,13 +450,3 @@ function showNotification(message) {
         }, 300);
     }, 3000);
 }
-
-// Добавляем стили для уведомлений
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideOutRight {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
-    }
-`;
-document.head.appendChild(style);
