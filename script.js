@@ -16,6 +16,8 @@ const skillsData = [
 ];
 
 let currentLanguage = 'ru';
+let mouseX = 0;
+let mouseY = 0;
 
 // Инициализация
 document.addEventListener('DOMContentLoaded', function() {
@@ -27,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeLanguageToggle();
     initializeStatsAnimation();
     initializeCopyButtons();
+    initializeScrollAnimations();
     
     // Проверяем сохраненную тему
     const savedTheme = localStorage.getItem('theme');
@@ -36,13 +39,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Частицы
+// Частицы с взаимодействием с курсором
 function initializeParticles() {
     const canvas = document.getElementById('particles-canvas');
     if (!canvas) return;
     
     const ctx = canvas.getContext('2d');
     let particles = [];
+    
+    // Отслеживание движения мыши
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
     
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -52,14 +61,16 @@ function initializeParticles() {
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
     
-    for (let i = 0; i < 50; i++) {
+    // Создание частиц
+    for (let i = 0; i < 80; i++) {
         particles.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            size: Math.random() * 2 + 1,
-            speedX: Math.random() * 0.2 - 0.1,
-            speedY: Math.random() * 0.2 - 0.1,
-            color: `rgba(108, 92, 231, ${Math.random() * 0.3})`
+            size: Math.random() * 3 + 1,
+            speedX: Math.random() * 0.5 - 0.25,
+            speedY: Math.random() * 0.5 - 0.25,
+            baseColor: `rgba(108, 92, 231, ${Math.random() * 0.3 + 0.1})`,
+            color: `rgba(108, 92, 231, ${Math.random() * 0.3 + 0.1})`
         });
     }
     
@@ -67,18 +78,52 @@ function initializeParticles() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         particles.forEach(p => {
+            // Движение
             p.x += p.speedX;
             p.y += p.speedY;
             
+            // Взаимодействие с мышью
+            const dx = mouseX - p.x;
+            const dy = mouseY - p.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < 100) {
+                const angle = Math.atan2(dy, dx);
+                const force = (100 - distance) / 100;
+                p.x -= Math.cos(angle) * force * 2;
+                p.y -= Math.sin(angle) * force * 2;
+                p.color = `rgba(255, 100, 100, ${Math.random() * 0.5 + 0.3})`;
+            } else {
+                p.color = p.baseColor;
+            }
+            
+            // Границы
             if (p.x > canvas.width) p.x = 0;
             if (p.x < 0) p.x = canvas.width;
             if (p.y > canvas.height) p.y = 0;
             if (p.y < 0) p.y = canvas.height;
             
+            // Отрисовка
             ctx.fillStyle = p.color;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fill();
+            
+            // Соединяем близкие частицы
+            particles.forEach(p2 => {
+                const dx = p.x - p2.x;
+                const dy = p.y - p2.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 100) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(108, 92, 231, ${0.1 * (1 - distance/100)})`;
+                    ctx.lineWidth = 1;
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            });
         });
         
         requestAnimationFrame(animate);
@@ -90,7 +135,7 @@ function initializeParticles() {
 // Печатающийся текст
 function initializeTypedText() {
     const typedText = document.querySelector('.typed-text');
-    const words = ['Инженер', 'Тестировщик', 'Автоматизатор'];
+    const words = ['Инженер', 'Тестировщик', 'Автоматизатор', 'Специалист'];
     let wordIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
@@ -121,7 +166,7 @@ function initializeTypedText() {
     type();
 }
 
-// Навыки
+// Навыки с плавными анимациями
 function initializeSkills() {
     const skillsGrid = document.getElementById('skillsGrid');
     if (!skillsGrid) return;
@@ -129,17 +174,38 @@ function initializeSkills() {
     function renderSkills(category = 'all') {
         const filtered = category === 'all' ? skillsData : skillsData.filter(s => s.category === category);
         
-        skillsGrid.innerHTML = filtered.map(skill => `
-            <div class="skill-item">
-                <div class="skill-name">
-                    <i class="${skill.icon}"></i>
-                    <span>${skill.name}</span>
+        // Анимация исчезновения
+        skillsGrid.style.opacity = '0';
+        skillsGrid.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            skillsGrid.innerHTML = filtered.map(skill => `
+                <div class="skill-item" style="animation-delay: ${Math.random() * 0.3}s">
+                    <div class="skill-name">
+                        <i class="${skill.icon}"></i>
+                        <span>${skill.name}</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="width: 0%"></div>
+                    </div>
                 </div>
-                <div class="skill-bar">
-                    <div class="skill-progress" style="width: ${skill.level}%"></div>
-                </div>
-            </div>
-        `).join('');
+            `).join('');
+            
+            // Анимация появления
+            skillsGrid.style.opacity = '1';
+            skillsGrid.style.transform = 'translateY(0)';
+            
+            // Заполнение прогресс-баров
+            setTimeout(() => {
+                document.querySelectorAll('.skill-item').forEach((item, index) => {
+                    const progress = item.querySelector('.skill-progress');
+                    const level = filtered[index].level;
+                    setTimeout(() => {
+                        progress.style.width = level + '%';
+                    }, index * 50);
+                });
+            }, 300);
+        }, 300);
     }
 
     renderSkills();
@@ -181,7 +247,8 @@ function initializeNavbar() {
         let current = '';
         document.querySelectorAll('section').forEach(section => {
             const sectionTop = section.offsetTop - 100;
-            if (window.scrollY >= sectionTop) {
+            const sectionBottom = sectionTop + section.offsetHeight;
+            if (window.scrollY >= sectionTop && window.scrollY < sectionBottom) {
                 current = section.getAttribute('id');
             }
         });
@@ -201,6 +268,11 @@ function initializeThemeToggle() {
     const icon = toggle.querySelector('i');
     
     toggle.addEventListener('click', () => {
+        toggle.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            toggle.style.transform = 'scale(1)';
+        }, 200);
+        
         document.body.classList.toggle('light-theme');
         
         if (document.body.classList.contains('light-theme')) {
@@ -220,11 +292,16 @@ function initializeLanguageToggle() {
     const en = toggle.querySelector('.lang-en');
     
     toggle.addEventListener('click', () => {
+        toggle.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            toggle.style.transform = 'scale(1)';
+        }, 200);
+        
         if (currentLanguage === 'ru') {
             currentLanguage = 'en';
             ru.classList.remove('active');
             en.classList.add('active');
-            // Здесь можно добавить логику перевода
+            // Здесь можно добавить логику перевода текста
         } else {
             currentLanguage = 'ru';
             en.classList.remove('active');
@@ -245,7 +322,7 @@ function initializeStatsAnimation() {
                 observer.unobserve(entry.target);
             }
         });
-    });
+    }, { threshold: 0.5 });
 
     stats.forEach(stat => observer.observe(stat));
 }
@@ -279,5 +356,29 @@ function showNotification(message) {
     notification.textContent = message;
     document.body.appendChild(notification);
     
-    setTimeout(() => notification.remove(), 3000);
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 2000);
+}
+
+// Анимации при скролле
+function initializeScrollAnimations() {
+    const animatedElements = document.querySelectorAll('.skill-item, .info-card, .project-card, .contact-card, .timeline-item');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1 });
+
+    animatedElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
 }
