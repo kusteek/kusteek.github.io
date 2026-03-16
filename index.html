@@ -10,9 +10,11 @@
 <body>
     <!-- Интерактивный фон с частицами -->
     <canvas id="particles-canvas"></canvas>
+    
 
     <!-- Эффект переключения темы -->
     <div class="theme-overlay"></div>
+    
 
     <!-- Навигация -->
     <nav class="navbar">
@@ -74,7 +76,7 @@
                         <span class="stat-label" data-i18n="years">Года опыта</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-number" data-target="200">200</span>
+                        <span class="stat-number" data-target="200">200+</span>
                         <span class="stat-label" data-i18n="bugs">багов</span>
                     </div>
                     <div class="stat-item">
@@ -106,6 +108,8 @@
 
         <!-- Обо мне -->
         <section id="about" class="about">
+            <!-- УДАЛЕН БЛОК .section-header, который содержал "Кто я" -->
+            
             <div class="section-header">
                 <span class="section-subtitle" data-i18n="who_i_am">Кто я</span>
                 <h2 class="section-title" data-i18n="about_me">Обо мне</h2>
@@ -118,6 +122,7 @@
                             QA-инженер, стремящийся к совершенству в обеспечении качества
                         </p>
                     </div>
+                    
 
                     <div class="about-description">
                         <p data-i18n="about_text">
@@ -160,7 +165,13 @@
                             <i class="fas fa-heart"></i>
                         </div>
                         <h3 data-i18n="interests">Интересы</h3>
+                        <!-- ИЗМЕНЕН БЛОК .interests-list -->
                         <div class="interests-list">
+                            <span class="interest-item"><i class="fas fa-book"></i> <span data-i18n="interest_1">Изучение новых технологий</span></span>
+                            <span class="interest-item"><i class="fas fa-robot"></i> <span data-i18n="interest_2">Автоматизация всего</span></span>
+                            <span class="interest-item"><i class="fas fa-chart-line"></i> <span data-i18n="interest_3">Оптимизация процессов</span></span>
+                            <span class="interest-item"><i class="fas fa-lightbulb"></i> <span data-i18n="interest_4">Поиск нестандартных решений</span></span>
+                            <span class="interest-item"><i class="fas fa-bullseye"></i> <span data-i18n="interest_5">Постоянное саморазвитие</span></span>
                             <span><i class="fas fa-book"></i> <span data-i18n="interest_1">Изучение новых технологий</span></span>
                             <span><i class="fas fa-robot"></i> <span data-i18n="interest_2">Автоматизация всего</span></span>
                             <span><i class="fas fa-chart-line"></i> <span data-i18n="interest_3">Оптимизация процессов</span></span>
@@ -179,6 +190,7 @@
                 <span class="section-subtitle" data-i18n="what_i_can">Что я умею</span>
                 <h2 class="section-title" data-i18n="skills">Навыки</h2>
             </div>
+            
 
             <div class="skills-filter">
                 <button class="filter-btn active" data-filter="all" data-i18n="all">Все</button>
@@ -196,6 +208,7 @@
                 <span class="section-subtitle" data-i18n="career_path">Карьерный путь</span>
                 <h2 class="section-title" data-i18n="experience">Опыт работы</h2>
             </div>
+            
 
             <div class="timeline">
                 <!-- ВТБ Опыт -->
