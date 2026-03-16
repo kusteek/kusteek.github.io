@@ -1,384 +1,337 @@
-// Данные для навыков
-const skillsData = [
-    { name: 'Автоматизация (Selenium)', category: 'automation', level: 85, icon: 'fas fa-robot' },
-    { name: 'Java', category: 'automation', level: 80, icon: 'fab fa-java' },
-    { name: 'JUnit/TestNG', category: 'automation', level: 85, icon: 'fas fa-vial' },
-    { name: 'Ручное тестирование', category: 'manual', level: 95, icon: 'fas fa-clipboard-list' },
-    { name: 'Тест-дизайн', category: 'manual', level: 90, icon: 'fas fa-pencil-ruler' },
-    { name: 'API тестирование', category: 'manual', level: 85, icon: 'fas fa-plug' },
-    { name: 'Мобильное тестирование', category: 'manual', level: 75, icon: 'fas fa-mobile-alt' },
-    { name: 'Jira', category: 'tools', level: 90, icon: 'fab fa-jira' },
-    { name: 'TestRail', category: 'tools', level: 85, icon: 'fas fa-tasks' },
-    { name: 'Postman', category: 'tools', level: 85, icon: 'fas fa-plug' },
-    { name: 'Git', category: 'tools', level: 80, icon: 'fab fa-git-alt' },
-    { name: 'Docker', category: 'tools', level: 70, icon: 'fab fa-docker' },
-    { name: 'SQL', category: 'tools', level: 75, icon: 'fas fa-database' }
-];
+// script.js
 
-let currentLanguage = 'ru';
-let mouseX = 0;
-let mouseY = 0;
-
-// Инициализация
 document.addEventListener('DOMContentLoaded', function() {
-    initializeParticles();
-    initializeTypedText();
-    initializeSkills();
-    initializeNavbar();
-    initializeThemeToggle();
-    initializeLanguageToggle();
-    initializeStatsAnimation();
-    initializeCopyButtons();
-    initializeScrollAnimations();
-    
-    // Проверяем сохраненную тему
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-        document.body.classList.add('light-theme');
-        document.querySelector('#themeToggle i').className = 'fas fa-sun';
-    }
-});
+    // ===== Инициализация =====
+    initTheme();
+    initParticles();
+    initTyped();
+    initSkills();
+    initMobileMenu();
+    initSmoothScroll();
+    initCopyButtons();
 
-// Частицы с взаимодействием с курсором
-function initializeParticles() {
-    const canvas = document.getElementById('particles-canvas');
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    
-    // Отслеживание движения мыши
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-    
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-    
-    // Создание частиц
-    for (let i = 0; i < 80; i++) {
-        particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 3 + 1,
-            speedX: Math.random() * 0.5 - 0.25,
-            speedY: Math.random() * 0.5 - 0.25,
-            baseColor: `rgba(108, 92, 231, ${Math.random() * 0.3 + 0.1})`,
-            color: `rgba(108, 92, 231, ${Math.random() * 0.3 + 0.1})`
-        });
-    }
-    
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ (с медленной анимацией) =====
+    function initTheme() {
+        const themeToggle = document.getElementById('themeToggle');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
         
-        particles.forEach(p => {
-            // Движение
-            p.x += p.speedX;
-            p.y += p.speedY;
-            
-            // Взаимодействие с мышью
-            const dx = mouseX - p.x;
-            const dy = mouseY - p.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            
-            if (distance < 100) {
-                const angle = Math.atan2(dy, dx);
-                const force = (100 - distance) / 100;
-                p.x -= Math.cos(angle) * force * 2;
-                p.y -= Math.sin(angle) * force * 2;
-                p.color = `rgba(255, 100, 100, ${Math.random() * 0.5 + 0.3})`;
+        // Загружаем сохраненную тему или используем системные настройки
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-theme');
+            updateThemeIcon('light');
+        } else if (savedTheme === 'dark') {
+            document.body.classList.remove('light-theme');
+            updateThemeIcon('dark');
+        } else {
+            // Используем системные настройки
+            if (!prefersDarkScheme.matches) {
+                document.body.classList.add('light-theme');
+                updateThemeIcon('light');
             } else {
-                p.color = p.baseColor;
+                updateThemeIcon('dark');
             }
+        }
+
+        // Обработчик клика по кнопке темы
+        if (themeToggle) {
+            themeToggle.addEventListener('click', function() {
+                // Используем requestAnimationFrame для плавности
+                requestAnimationFrame(() => {
+                    document.body.classList.toggle('light-theme');
+                    
+                    if (document.body.classList.contains('light-theme')) {
+                        localStorage.setItem('theme', 'light');
+                        updateThemeIcon('light');
+                    } else {
+                        localStorage.setItem('theme', 'dark');
+                        updateThemeIcon('dark');
+                    }
+                    
+                    // Обновляем частицы при смене темы
+                    if (window.particles) {
+                        updateParticlesColor();
+                    }
+                });
+            });
+        }
+    }
+
+    function updateThemeIcon(theme) {
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            const icon = themeToggle.querySelector('i');
+            if (icon) {
+                icon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        }
+    }
+
+    // ===== ЧАСТИЦЫ =====
+    function initParticles() {
+        const canvas = document.getElementById('particles-canvas');
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animationFrame;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function createParticles() {
+            particles = [];
+            const particleCount = 50;
             
-            // Границы
-            if (p.x > canvas.width) p.x = 0;
-            if (p.x < 0) p.x = canvas.width;
-            if (p.y > canvas.height) p.y = 0;
-            if (p.y < 0) p.y = canvas.height;
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 2 + 1,
+                    speedX: (Math.random() - 0.5) * 0.5,
+                    speedY: (Math.random() - 0.5) * 0.5,
+                    opacity: Math.random() * 0.5 + 0.2
+                });
+            }
+        }
+
+        function updateParticlesColor() {
+            // Функция будет вызвана при смене темы
+            // Перерисовываем с новыми цветами
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Отрисовка
-            ctx.fillStyle = p.color;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
+            const isLightTheme = document.body.classList.contains('light-theme');
+            const particleColor = isLightTheme ? '#6c5ce7' : '#a463f5';
             
-            // Соединяем близкие частицы
-            particles.forEach(p2 => {
-                const dx = p.x - p2.x;
-                const dy = p.y - p2.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
+            particles.forEach(particle => {
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                ctx.fillStyle = particleColor;
+                ctx.globalAlpha = particle.opacity;
+                ctx.fill();
                 
-                if (distance < 100) {
-                    ctx.beginPath();
-                    ctx.strokeStyle = `rgba(108, 92, 231, ${0.1 * (1 - distance/100)})`;
-                    ctx.lineWidth = 1;
-                    ctx.moveTo(p.x, p.y);
-                    ctx.lineTo(p2.x, p2.y);
-                    ctx.stroke();
+                // Двигаем частицы
+                particle.x += particle.speedX;
+                particle.y += particle.speedY;
+                
+                // Возвращаем в край если ушли за границы
+                if (particle.x < 0 || particle.x > canvas.width) {
+                    particle.speedX *= -1;
+                }
+                if (particle.y < 0 || particle.y > canvas.height) {
+                    particle.speedY *= -1;
+                }
+            });
+            
+            animationFrame = requestAnimationFrame(drawParticles);
+        }
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            createParticles();
+        });
+
+        resizeCanvas();
+        createParticles();
+        drawParticles();
+
+        // Сохраняем ссылку на функции для обновления
+        window.particles = {
+            updateColor: updateParticlesColor
+        };
+    }
+
+    // ===== TYPED TEXT =====
+    function initTyped() {
+        const typedElement = document.querySelector('.typed-text');
+        if (!typedElement) return;
+
+        const words = ['Engineer', 'Automation', 'Manual', 'Tester'];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function type() {
+            const currentWord = words[wordIndex];
+            
+            if (isDeleting) {
+                typedElement.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typedElement.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                isDeleting = true;
+                setTimeout(type, 1500);
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                setTimeout(type, 200);
+            } else {
+                setTimeout(type, isDeleting ? 50 : 100);
+            }
+        }
+
+        type();
+    }
+
+    // ===== НАВЫКИ =====
+    function initSkills() {
+        const skillsGrid = document.getElementById('skillsGrid');
+        if (!skillsGrid) return;
+
+        // Данные навыков
+        const skills = [
+            { name: 'Java', category: 'automation', icon: 'fab fa-java' },
+            { name: 'Python', category: 'automation', icon: 'fab fa-python' },
+            { name: 'Selenium', category: 'automation', icon: 'fas fa-code' },
+            { name: 'JUnit', category: 'automation', icon: 'fas fa-vial' },
+            { name: 'TestNG', category: 'automation', icon: 'fas fa-vial' },
+            { name: 'REST Assured', category: 'automation', icon: 'fas fa-cloud' },
+            { name: 'Manual Testing', category: 'manual', icon: 'fas fa-clipboard-list' },
+            { name: 'Test Design', category: 'manual', icon: 'fas fa-pencil-ruler' },
+            { name: 'Regression', category: 'manual', icon: 'fas fa-undo-alt' },
+            { name: 'Smoke Testing', category: 'manual', icon: 'fas fa-fire' },
+            { name: 'Jira', category: 'tools', icon: 'fab fa-jira' },
+            { name: 'TestRail', category: 'tools', icon: 'fas fa-train' },
+            { name: 'Postman', category: 'tools', icon: 'fas fa-mail-bulk' },
+            { name: 'Git', category: 'tools', icon: 'fab fa-git-alt' },
+            { name: 'SQL', category: 'tools', icon: 'fas fa-database' },
+            { name: 'Docker', category: 'tools', icon: 'fab fa-docker' }
+        ];
+
+        function displaySkills(category = 'all') {
+            skillsGrid.innerHTML = '';
+            
+            const filteredSkills = category === 'all' 
+                ? skills 
+                : skills.filter(skill => skill.category === category);
+            
+            filteredSkills.forEach(skill => {
+                const skillElement = document.createElement('div');
+                skillElement.className = 'skill-item';
+                skillElement.innerHTML = `
+                    <i class="${skill.icon}"></i>
+                    <span>${skill.name}</span>
+                `;
+                skillsGrid.appendChild(skillElement);
+            });
+        }
+
+        // Фильтрация навыков
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                filterButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const filter = this.getAttribute('data-filter');
+                displaySkills(filter);
+            });
+        });
+
+        // Показываем все навыки по умолчанию
+        displaySkills('all');
+    }
+
+    // ===== МОБИЛЬНОЕ МЕНЮ =====
+    function initMobileMenu() {
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (hamburger && navLinks) {
+            hamburger.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+
+            // Закрываем меню при клике на ссылку
+            navLinks.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+        }
+    }
+
+    // ===== ПЛАВНЫЙ СКРОЛЛ =====
+    function initSmoothScroll() {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
             });
         });
-        
-        requestAnimationFrame(animate);
-    }
-    
-    animate();
-}
 
-// Печатающийся текст
-function initializeTypedText() {
-    const typedText = document.querySelector('.typed-text');
-    const words = ['Инженер', 'Тестировщик', 'Автоматизатор', 'Специалист'];
-    let wordIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
+        // Подсветка активного пункта меню при скролле
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
 
-    function type() {
-        const currentWord = words[wordIndex];
-        
-        if (isDeleting) {
-            typedText.textContent = currentWord.substring(0, charIndex - 1);
-            charIndex--;
-        } else {
-            typedText.textContent = currentWord.substring(0, charIndex + 1);
-            charIndex++;
-        }
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const scrollPosition = window.scrollY + 100;
 
-        if (!isDeleting && charIndex === currentWord.length) {
-            isDeleting = true;
-            setTimeout(type, 2000);
-        } else if (isDeleting && charIndex === 0) {
-            isDeleting = false;
-            wordIndex = (wordIndex + 1) % words.length;
-            setTimeout(type, 500);
-        } else {
-            setTimeout(type, 100);
-        }
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionBottom = sectionTop + section.offsetHeight;
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
     }
 
-    type();
-}
-
-// Навыки с плавными анимациями
-function initializeSkills() {
-    const skillsGrid = document.getElementById('skillsGrid');
-    if (!skillsGrid) return;
-
-    function renderSkills(category = 'all') {
-        const filtered = category === 'all' ? skillsData : skillsData.filter(s => s.category === category);
-        
-        // Анимация исчезновения
-        skillsGrid.style.opacity = '0';
-        skillsGrid.style.transform = 'translateY(20px)';
-        
-        setTimeout(() => {
-            skillsGrid.innerHTML = filtered.map(skill => `
-                <div class="skill-item" style="animation-delay: ${Math.random() * 0.3}s">
-                    <div class="skill-name">
-                        <i class="${skill.icon}"></i>
-                        <span>${skill.name}</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div class="skill-progress" style="width: 0%"></div>
-                    </div>
-                </div>
-            `).join('');
-            
-            // Анимация появления
-            skillsGrid.style.opacity = '1';
-            skillsGrid.style.transform = 'translateY(0)';
-            
-            // Заполнение прогресс-баров
-            setTimeout(() => {
-                document.querySelectorAll('.skill-item').forEach((item, index) => {
-                    const progress = item.querySelector('.skill-progress');
-                    const level = filtered[index].level;
-                    setTimeout(() => {
-                        progress.style.width = level + '%';
-                    }, index * 50);
-                });
-            }, 300);
-        }, 300);
+    // ===== КНОПКИ КОПИРОВАНИЯ =====
+    function initCopyButtons() {
+        window.copyToClipboard = function(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Можно добавить уведомление
+                console.log('Copied to clipboard:', text);
+                
+                // Визуальная обратная связь
+                const btn = event.currentTarget;
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i>';
+                btn.style.background = '#00ff00';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        };
     }
 
-    renderSkills();
-
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderSkills(btn.dataset.filter);
-        });
+    // ===== ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА (вспомогательная функция) =====
+    // Основная логика перевода находится в HTML, но здесь можно добавить
+    // дополнительную логику, если нужно обновлять динамические элементы
+    window.addEventListener('languageChanged', function(e) {
+        // Если нужно обновить что-то динамическое при смене языка
+        console.log('Language changed to:', e.detail.lang);
     });
-}
-
-// Навигация
-function initializeNavbar() {
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-links');
-    const navLinks = document.querySelectorAll('.nav-link');
-
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-    });
-
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const target = document.querySelector(link.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
-                navMenu.classList.remove('active');
-                hamburger.classList.remove('active');
-            }
-        });
-    });
-
-    // Активная ссылка при скролле
-    window.addEventListener('scroll', () => {
-        let current = '';
-        document.querySelectorAll('section').forEach(section => {
-            const sectionTop = section.offsetTop - 100;
-            const sectionBottom = sectionTop + section.offsetHeight;
-            if (window.scrollY >= sectionTop && window.scrollY < sectionBottom) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${current}`) {
-                link.classList.add('active');
-            }
-        });
-    });
-}
-
-// Переключение темы
-function initializeThemeToggle() {
-    const toggle = document.getElementById('themeToggle');
-    const icon = toggle.querySelector('i');
-    
-    toggle.addEventListener('click', () => {
-        toggle.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            toggle.style.transform = 'scale(1)';
-        }, 200);
-        
-        document.body.classList.toggle('light-theme');
-        
-        if (document.body.classList.contains('light-theme')) {
-            icon.className = 'fas fa-sun';
-            localStorage.setItem('theme', 'light');
-        } else {
-            icon.className = 'fas fa-moon';
-            localStorage.setItem('theme', 'dark');
-        }
-    });
-}
-
-// Переключение языка
-function initializeLanguageToggle() {
-    const toggle = document.getElementById('languageToggle');
-    const ru = toggle.querySelector('.lang-ru');
-    const en = toggle.querySelector('.lang-en');
-    
-    toggle.addEventListener('click', () => {
-        toggle.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            toggle.style.transform = 'scale(1)';
-        }, 200);
-        
-        if (currentLanguage === 'ru') {
-            currentLanguage = 'en';
-            ru.classList.remove('active');
-            en.classList.add('active');
-            // Здесь можно добавить логику перевода текста
-        } else {
-            currentLanguage = 'ru';
-            en.classList.remove('active');
-            ru.classList.add('active');
-        }
-    });
-}
-
-// Анимация статистики
-function initializeStatsAnimation() {
-    const stats = document.querySelectorAll('.stat-number');
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const target = parseInt(entry.target.dataset.target);
-                animateNumber(entry.target, 0, target, 2000);
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
-
-    stats.forEach(stat => observer.observe(stat));
-}
-
-function animateNumber(element, start, end, duration) {
-    let startTime = null;
-    
-    function animate(currentTime) {
-        if (!startTime) startTime = currentTime;
-        const progress = Math.min((currentTime - startTime) / duration, 1);
-        element.textContent = Math.floor(progress * (end - start) + start);
-        
-        if (progress < 1) {
-            requestAnimationFrame(animate);
-        }
-    }
-    
-    requestAnimationFrame(animate);
-}
-
-// Копирование в буфер
-window.copyToClipboard = function(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        showNotification('Скопировано!');
-    });
-};
-
-function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => notification.remove(), 300);
-    }, 2000);
-}
-
-// Анимации при скролле
-function initializeScrollAnimations() {
-    const animatedElements = document.querySelectorAll('.skill-item, .info-card, .project-card, .contact-card, .timeline-item');
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, { threshold: 0.1 });
-
-    animatedElements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
-    });
-}
+});
