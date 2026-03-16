@@ -11,9 +11,6 @@
     <!-- Интерактивный фон с частицами -->
     <canvas id="particles-canvas"></canvas>
     
-    <!-- Эффект переключения темы -->
-    <div class="theme-overlay"></div>
-    
     <!-- Навигация -->
     <nav class="navbar">
         <div class="nav-container">
@@ -22,12 +19,11 @@
                 <span class="dot">.</span>
             </div>
             <ul class="nav-links">
-                <li><a href="#home" class="nav-link active" data-i18n="nav_home">Главная</a></li>
-                <li><a href="#about" class="nav-link" data-i18n="nav_about">Обо мне</a></li>
-                <li><a href="#skills" class="nav-link" data-i18n="nav_skills">Навыки</a></li>
-                <li><a href="#experience" class="nav-link" data-i18n="nav_experience">Опыт</a></li>
-                <li><a href="#projects" class="nav-link" data-i18n="nav_projects">Проекты</a></li>
-                <li><a href="#contact" class="nav-link" data-i18n="nav_contact">Контакты</a></li>
+                <!-- Убраны пункты меню: Опыт, Проекты, Контакты -->
+                <li><a href="#home" class="nav-link active" data-key="nav_home">Главная</a></li>
+                <li><a href="#about" class="nav-link" data-key="nav_about">Обо мне</a></li>
+                <li><a href="#skills" class="nav-link" data-key="nav_skills">Навыки</a></li>
+                <!-- Можно добавить ссылку на резюме или другую секцию -->
             </ul>
             <div class="controls-wrapper">
                 <div class="theme-toggle" id="themeToggle">
@@ -50,157 +46,316 @@
         <!-- Hero секция -->
         <section id="home" class="hero">
             <div class="hero-content">
-                <div class="hero-badge" data-i18n="available">🔥 Доступен для работы</div>
+                <div class="hero-badge" data-key="hero_badge">🔥 Доступен для работы</div>
                 <h1 class="hero-title">
-                    <span class="reveal-text" data-i18n="hello">Привет, я</span>
+                    <span class="reveal-text" data-key="hero_hi">Привет, я</span>
                     <span class="gradient-text">Клёк Артём</span>
                 </h1>
                 <h2 class="hero-subtitle">
                     QA <span class="typed-text"></span><span class="cursor">|</span>
                 </h2>
-                <p class="hero-description" data-i18n="description">
+                <p class="hero-description" data-key="hero_desc">
                     Стремлюсь к постоянному развитию в сфере обеспечения качества и тестирования. 
                     Увлечен автоматизацией и поиском новых подходов к улучшению процессов.
                 </p>
                 <div class="hero-cta">
                     <a href="#contact" class="btn btn-primary">
-                        <span data-i18n="contact_me">Связаться со мной</span>
+                        <span data-key="hero_btn">Связаться со мной</span>
                         <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
                 <div class="hero-stats">
                     <div class="stat-item">
                         <span class="stat-number" data-target="2">2</span>
-                        <span class="stat-label" data-i18n="years">Года опыта</span>
+                        <span class="stat-label" data-key="stat_exp">Года опыта</span>
                     </div>
-                            <li><i class="fas fa-flask"></i> <span data-i18n="neoflex_2">Выполнение комплексного тестирования</span></li>
-                            <li><i class="fas fa-shield-alt"></i> <span data-i18n="neoflex_3">Управление дефектами и отслеживание качества</span></li>
-                            <li><i class="fas fa-database"></i> <span data-i18n="neoflex_4">Работа с тестовыми данными</span></li>
-                            <li><i class="fas fa-chart-line"></i> <span data-i18n="neoflex_5">Отчётность и анализ результатов</span></li>
-                        </ul>
-                        <div class="tech-tags">
-                            <span>Jira</span>
-                            <span>Test design</span>
-                            <span>Manual</span>
-                            <span>Postman</span>
-                        </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="200">200</span>
+                        <span class="stat-label" data-key="stat_bugs">+ багов</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="5">5</span>
+                        <span class="stat-label" data-key="stat_proj">проектов</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="floating-card">
+                    <i class="fas fa-bug"></i>
+                    <span>Bug Hunter</span>
+                </div>
+                <div class="floating-card card-2">
+                    <i class="fas fa-robot"></i>
+                    <span>Auto QA</span>
+                </div>
+                <div class="floating-card card-3">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Quality</span>
+                </div>
+                <div class="profile-circle">
+                    <div class="profile-img">
+                        <!-- ЗАМЕНИТЕ НА СВОЕ ФОТО -->
+                        <img src="https://via.placeholder.com/400" alt="Profile">
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Проекты -->
-        <section id="projects" class="projects">
+        <!-- Обо мне -->
+        <section id="about" class="about">
             <div class="section-header">
-                <span class="section-subtitle" data-i18n="my_projects">Мои работы</span>
-                <h2 class="section-title" data-i18n="projects">Проекты</h2>
+                <span class="section-subtitle" data-key="about_subtitle">Кто я</span>
+                <h2 class="section-title" data-key="about_title">Обо мне</h2>
             </div>
-
-            <div class="projects-grid">
-                <!-- Проект Tutu.ru -->
-                <div class="project-card" onclick="window.open('https://github.com/kusteek/tutu-qa-project', '_blank')">
-                    <div class="project-icon">
-                        <i class="fas fa-train"></i>
-                    </div>
-                    <div class="project-content">
-                        <h3 data-i18n="project_title">Автоматизированное тестирование Tutu.ru</h3>
-                        <p class="project-description" data-i18n="project_desc">
-                            Разработка фреймворка для автоматизации тестирования веб-приложения Tutu.ru. 
-                            Включает UI и API тесты с генерацией отчетов.
+            <div class="about-content">
+                <div class="about-text">
+                    <div class="quote-wrapper">
+                        <i class="fas fa-quote-left quote-icon"></i>
+                        <p class="highlight-text" data-key="about_quote">
+                            QA-инженер, стремящийся к совершенству в обеспечении качества
                         </p>
-                        <div class="project-tech">
-                            <span>Java</span>
-                            <span>Selenium</span>
-                            <span>JUnit 5</span>
-                            <span>Allure</span>
-                            <span>REST Assured</span>
-                        </div>
-                        <div class="project-link">
-                            <i class="fab fa-github"></i>
-                            <span>github.com/kusteek/tutu-qa-project</span>
-                        </div>
-                        <div class="project-hover">
-                            <span data-i18n="open_github">Открыть на GitHub →</span>
+                    </div>
+                    
+                    <div class="about-description">
+                        <p data-key="about_desc">
+                            За 2 года работы в IT участвовал в тестировании различных проектов. 
+                            Постоянно учусь новому, слежу за трендами в тестировании и применяю 
+                            современные подходы в работе.
+                        </p>
+                        <div class="about-highlights">
+                            <div class="highlight-item">
+                                <span class="highlight-number">5+</span>
+                                <span class="highlight-label" data-key="about_highlight_proj">Проектов</span>
+                            </div>
+                            <div class="highlight-item">
+                                <span class="highlight-number">200+</span>
+                                <span class="highlight-label" data-key="about_highlight_bugs">Найденных багов</span>
+                            </div>
+                            <div class="highlight-item">
+                                <span class="highlight-number">100%</span>
+                                <span class="highlight-label" data-key="about_highlight_resp">Ответственность</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="about-cards">
+                    <div class="info-card">
+                        <div class="card-icon">
+                            <i class="fas fa-map-pin"></i>
+                        </div>
+                        <h3 data-key="about_card_loc_title">Локация</h3>
+                        <p data-key="about_card_loc_value">Новосибирск, Россия</p>
+                        <div class="card-decoration"></div>
+                    </div>
+                    <div class="info-card">
+                        <div class="card-icon">
+                            <i class="fas fa-language"></i>
+                        </div>
+                        <h3 data-key="about_card_lang_title">Языки</h3>
+                        <p><span data-key="about_card_lang_ru">Русский</span> (Native)</p>
+                        <p>English (B1 - Intermediate)</p>
+                        <div class="card-decoration"></div>
+                    </div>
+                    <div class="info-card">
+                        <div class="card-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3 data-key="about_card_interests_title">Интересы</h3>
+                        <div class="interests-list">
+                            <span data-key="interest_1">📚 Изучение новых технологий</span>
+                            <span data-key="interest_2">🤖 Автоматизация всего</span>
+                            <span data-key="interest_3">📈 Оптимизация процессов</span>
+                            <span data-key="interest_4">💡 Поиск нестандартных решений</span>
+                            <span data-key="interest_5">🎯 Постоянное саморазвитие</span>
+                        </div>
+                        <div class="card-decoration"></div>
+                    </div>
+                </div>
             </div>
+        </section>
+
+        <!-- Навыки -->
+        <section id="skills" class="skills">
+            <div class="section-header">
+                <span class="section-subtitle" data-key="skills_subtitle">Что я умею</span>
+                <h2 class="section-title" data-key="skills_title">Навыки</h2>
+            </div>
+            
+            <div class="skills-filter">
+                <button class="filter-btn active" data-filter="all" data-key="filter_all">Все</button>
+                <button class="filter-btn" data-filter="automation" data-key="filter_auto">Автоматизация</button>
+                <button class="filter-btn" data-filter="manual" data-key="filter_manual">Ручное тестирование</button>
+                <button class="filter-btn" data-filter="tools" data-key="filter_tools">Инструменты</button>
+            </div>
+
+            <div class="skills-grid" id="skillsGrid"></div>
+            <!-- Навыки (skills) заполняются через script.js, их текст тоже нужно будет переводить -->
         </section>
 
         <!-- Призыв к действию -->
         <section class="cta-section">
             <div class="cta-content">
-                <h2 data-i18n="cta_title">Открыт к предложениям!</h2>
-                <p data-i18n="cta_text">Готов применять свои навыки и развиваться в новой команде</p>
+                <h2 data-key="cta_title">Открыт к предложениям!</h2>
+                <p data-key="cta_desc">Готов применять свои навыки и развиваться в новой команде</p>
                 <a href="#contact" class="btn btn-primary btn-large">
-                    <span data-i18n="cta_button">Написать мне</span>
+                    <span data-key="cta_btn">Написать мне</span>
                     <i class="fas fa-paper-plane"></i>
                 </a>
             </div>
         </section>
 
-        <!-- Контакты -->
-        <section id="contact" class="contact">
-            <div class="section-header">
-                <span class="section-subtitle" data-i18n="get_in_touch">Свяжитесь со мной</span>
-                <h2 class="section-title" data-i18n="contacts">Контакты</h2>
-            </div>
+        <!-- СЕКЦИИ УДАЛЕНЫ: Опыт, Проекты, Контакты -->
+        <!-- Вместо Контактов можно оставить простой блок с email или убрать ссылку из меню -->
 
-            <div class="contact-content">
-                <div class="contact-info">
-                    <div class="contact-card" onclick="window.location.href='mailto:lol.kleka2000@mail.ru'">
-                        <div class="contact-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <h3>Email</h3>
-                        <span>lol.kleka2000@mail.ru</span>
-                        <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('lol.kleka2000@mail.ru')">
-                            <i class="far fa-copy"></i>
-                        </button>
-                    </div>
-
-                    <div class="contact-card" onclick="window.open('https://t.me/kusteeek', '_blank')">
-                        <div class="contact-icon">
-                            <i class="fab fa-telegram"></i>
-                        </div>
-                        <h3>Telegram</h3>
-                        <span>@kusteeek</span>
-                        <span class="status online">● online</span>
-                    </div>
-
-                    <div class="contact-card" onclick="window.open('https://github.com/kusteek', '_blank')">
-                        <div class="contact-icon">
-                            <i class="fab fa-github"></i>
-                        </div>
-                        <h3>GitHub</h3>
-                        <span>@kusteek</span>
-                        <div class="github-stats">
-                            <span>⭐ 5 репозиториев</span>
-                        </div>
-                    </div>
-
-                    <div class="contact-card">
-                        <div class="contact-icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <h3 data-i18n="location">Локация</h3>
-                        <span>Новосибирск</span>
-                        <span class="stats">UTC+7</span>
-                    </div>
-                </div>
-            </div>
-        </section>
     </main>
 
     <footer>
         <div class="footer-content">
-            <p>© 2026 Клёк Артём - <span data-i18n="qa_engineer">QA Инженер</span></p>
-            <div class="made-with">
-                <span data-i18n="made_with">Сделано с ❤️ в Новосибирске</span>
+            <p>© 2026 Клёк Артём - <span data-key="footer_title">QA Инженер</span></p>
+            <div class="made-with" data-key="footer_made">
+                Сделано с ❤️ в Новосибирске
             </div>
         </div>
     </footer>
 
     <script src="script.js"></script>
+    <!-- Добавляем скрипт перевода прямо в этот файл или в script.js -->
+    <script>
+        (function() {
+            // --- Объект с переводами ---
+            const translations = {
+                ru: {
+                    nav_home: 'Главная',
+                    nav_about: 'Обо мне',
+                    nav_skills: 'Навыки',
+                    hero_badge: '🔥 Доступен для работы',
+                    hero_hi: 'Привет, я',
+                    hero_desc: 'Стремлюсь к постоянному развитию в сфере обеспечения качества и тестирования. Увлечен автоматизацией и поиском новых подходов к улучшению процессов.',
+                    hero_btn: 'Связаться со мной',
+                    stat_exp: 'Года опыта',
+                    stat_bugs: '+ багов',
+                    stat_proj: 'проектов',
+                    about_subtitle: 'Кто я',
+                    about_title: 'Обо мне',
+                    about_quote: 'QA-инженер, стремящийся к совершенству в обеспечении качества',
+                    about_desc: 'За 2 года работы в IT участвовал в тестировании различных проектов. Постоянно учусь новому, слежу за трендами в тестировании и применяю современные подходы в работе.',
+                    about_highlight_proj: 'Проектов',
+                    about_highlight_bugs: 'Найденных багов',
+                    about_highlight_resp: 'Ответственность',
+                    about_card_loc_title: 'Локация',
+                    about_card_loc_value: 'Новосибирск, Россия',
+                    about_card_lang_title: 'Языки',
+                    about_card_lang_ru: 'Русский',
+                    about_card_interests_title: 'Интересы',
+                    interest_1: '📚 Изучение новых технологий',
+                    interest_2: '🤖 Автоматизация всего',
+                    interest_3: '📈 Оптимизация процессов',
+                    interest_4: '💡 Поиск нестандартных решений',
+                    interest_5: '🎯 Постоянное саморазвитие',
+                    skills_subtitle: 'Что я умею',
+                    skills_title: 'Навыки',
+                    filter_all: 'Все',
+                    filter_auto: 'Автоматизация',
+                    filter_manual: 'Ручное тестирование',
+                    filter_tools: 'Инструменты',
+                    cta_title: 'Открыт к предложениям!',
+                    cta_desc: 'Готов применять свои навыки и развиваться в новой команде',
+                    cta_btn: 'Написать мне',
+                    footer_title: 'QA Инженер',
+                    footer_made: 'Сделано с ❤️ в Новосибирске'
+                },
+                en: {
+                    nav_home: 'Home',
+                    nav_about: 'About',
+                    nav_skills: 'Skills',
+                    hero_badge: '🔥 Open for work',
+                    hero_hi: "Hi, I'm",
+                    hero_desc: 'I strive for continuous development in the field of quality assurance and testing. Passionate about automation and finding new approaches to improve processes.',
+                    hero_btn: 'Contact me',
+                    stat_exp: 'Years exp.',
+                    stat_bugs: '+ bugs',
+                    stat_proj: 'projects',
+                    about_subtitle: 'Who I am',
+                    about_title: 'About me',
+                    about_quote: 'QA engineer striving for excellence in quality assurance',
+                    about_desc: 'For 2 years in IT, I have participated in testing various projects. I constantly learn new things, follow trends in testing and apply modern approaches in my work.',
+                    about_highlight_proj: 'Projects',
+                    about_highlight_bugs: 'Bugs found',
+                    about_highlight_resp: 'Responsibility',
+                    about_card_loc_title: 'Location',
+                    about_card_loc_value: 'Novosibirsk, Russia',
+                    about_card_lang_title: 'Languages',
+                    about_card_lang_ru: 'Russian',
+                    about_card_interests_title: 'Interests',
+                    interest_1: '📚 Learning new tech',
+                    interest_2: '🤖 Automating everything',
+                    interest_3: '📈 Process optimization',
+                    interest_4: '💡 Finding solutions',
+                    interest_5: '🎯 Constant self-growth',
+                    skills_subtitle: 'What I do',
+                    skills_title: 'Skills',
+                    filter_all: 'All',
+                    filter_auto: 'Automation',
+                    filter_manual: 'Manual',
+                    filter_tools: 'Tools',
+                    cta_title: "I'm open to offers!",
+                    cta_desc: 'Ready to apply my skills and grow in a new team',
+                    cta_btn: 'Write me',
+                    footer_title: 'QA Engineer',
+                    footer_made: 'Made with ❤️ in Novosibirsk'
+                }
+            };
+
+            let currentLang = 'ru';
+
+            // --- Функция перевода ---
+            function translatePage(lang) {
+                const elements = document.querySelectorAll('[data-key]');
+                elements.forEach(el => {
+                    const key = el.getAttribute('data-key');
+                    if (translations[lang] && translations[lang][key]) {
+                        // Для input, кнопок и простых элементов
+                        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                            el.placeholder = translations[lang][key];
+                        } else {
+                            el.innerHTML = translations[lang][key];
+                        }
+                    }
+                });
+
+                // Обновить активное состояние кнопок языка
+                document.querySelector('.lang-ru').classList.toggle('active', lang === 'ru');
+                document.querySelector('.lang-en').classList.toggle('active', lang === 'en');
+
+                // Сохранить выбранный язык (например, в localStorage)
+                localStorage.setItem('preferredLanguage', lang);
+                currentLang = lang;
+            }
+
+            // --- Обработчик клика по переключателю ---
+            document.addEventListener('DOMContentLoaded', function() {
+                const langToggle = document.getElementById('languageToggle');
+                if (langToggle) {
+                    langToggle.addEventListener('click', function(e) {
+                        // Определяем, на какой язык переключаем
+                        const isCurrentlyRu = document.querySelector('.lang-ru').classList.contains('active');
+                        const newLang = isCurrentlyRu ? 'en' : 'ru';
+                        translatePage(newLang);
+                    });
+                }
+
+                // Загрузить сохраненный язык (если есть)
+                const savedLang = localStorage.getItem('preferredLanguage');
+                if (savedLang && (savedLang === 'en' || savedLang === 'ru')) {
+                    translatePage(savedLang);
+                }
+
+                // --- Простая инициализация частиц, если есть в script.js ---
+                // Здесь можно оставить вызов функции initParticles() если она есть в script.js
+                // Но это не обязательно для работы перевода
+            });
+
+        })();
+    </script>
 </body>
 </html>
