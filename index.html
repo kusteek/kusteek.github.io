@@ -19,11 +19,12 @@
                 <span class="dot">.</span>
             </div>
             <ul class="nav-links">
-                <!-- Убраны пункты меню: Опыт, Проекты, Контакты -->
                 <li><a href="#home" class="nav-link active" data-key="nav_home">Главная</a></li>
                 <li><a href="#about" class="nav-link" data-key="nav_about">Обо мне</a></li>
                 <li><a href="#skills" class="nav-link" data-key="nav_skills">Навыки</a></li>
-                <!-- Можно добавить ссылку на резюме или другую секцию -->
+                <li><a href="#experience" class="nav-link" data-key="nav_experience">Опыт</a></li>
+                <li><a href="#projects" class="nav-link" data-key="nav_projects">Проекты</a></li>
+                <li><a href="#contact" class="nav-link" data-key="nav_contact">Контакты</a></li>
             </ul>
             <div class="controls-wrapper">
                 <div class="theme-toggle" id="themeToggle">
@@ -94,7 +95,6 @@
                 </div>
                 <div class="profile-circle">
                     <div class="profile-img">
-                        <!-- ЗАМЕНИТЕ НА СВОЕ ФОТО -->
                         <img src="https://via.placeholder.com/400" alt="Profile">
                     </div>
                 </div>
@@ -174,7 +174,7 @@
             </div>
         </section>
 
-        <!-- Навыки -->
+        <!-- Навыки (динамические, заполняются через script.js) -->
         <section id="skills" class="skills">
             <div class="section-header">
                 <span class="section-subtitle" data-key="skills_subtitle">Что я умею</span>
@@ -188,8 +188,112 @@
                 <button class="filter-btn" data-filter="tools" data-key="filter_tools">Инструменты</button>
             </div>
 
-            <div class="skills-grid" id="skillsGrid"></div>
-            <!-- Навыки (skills) заполняются через script.js, их текст тоже нужно будет переводить -->
+            <div class="skills-grid" id="skillsGrid"></div> <!-- Заполняется из script.js -->
+        </section>
+
+        <!-- Опыт работы (ВОЗВРАЩЁН) -->
+        <section id="experience" class="experience">
+            <div class="section-header">
+                <span class="section-subtitle" data-key="exp_subtitle">Карьерный путь</span>
+                <h2 class="section-title" data-key="exp_title">Опыт работы</h2>
+            </div>
+            
+            <div class="timeline">
+                <!-- ВТБ Опыт -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2024 — 2026</div>
+                    <div class="timeline-content">
+                        <div class="company-logo">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h3>QA Engineer</h3>
+                        <h4>ВТБ · <span data-key="exp_vtb_fulltime">Полный день</span></h4>
+                        <ul class="experience-list">
+                            <li><i class="fas fa-bug"></i> <span data-key="exp_vtb_1">Проектирование и планирование тестирования</span></li>
+                            <li><i class="fas fa-flask"></i> <span data-key="exp_vtb_2">Выполнение комплексного тестирования (функциональное, регрессионное, smoke и т.д.)</span></li>
+                            <li><i class="fas fa-shield-alt"></i> <span data-key="exp_vtb_3">Управление дефектами и отслеживание качества</span></li>
+                            <li><i class="fas fa-database"></i> <span data-key="exp_vtb_4">Работа с тестовыми данными и тестовым окружением</span></li>
+                            <li><i class="fas fa-chart-line"></i> <span data-key="exp_vtb_5">Отчётность и анализ результатов тестирования</span></li>
+                            <li><i class="fas fa-code-branch"></i> <span data-key="exp_vtb_6">Интеграция в процессы разработки</span></li>
+                            <li><i class="fas fa-users"></i> <span data-key="exp_vtb_7">Демонстрация функционала заказчику (ПСИ)</span></li>
+                        </ul>
+                        <div class="tech-tags">
+                            <span>Jira</span>
+                            <span>TestRail</span>
+                            <span>Postman</span>
+                            <span>SQL</span>
+                            <span>Git</span>
+                            <span>Java</span>
+                            <span>Selenium</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Неофлекс Опыт -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2024</div>
+                    <div class="timeline-content">
+                        <div class="company-logo">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h3>Стажер → Junior QA</h3>
+                        <h4>Неофлекс · <span data-key="exp_neoflex_duration">4 месяца</span></h4>
+                        <ul class="experience-list">
+                            <li><i class="fas fa-bug"></i> <span data-key="exp_neoflex_1">Проектирование и планирование тестирования</span></li>
+                            <li><i class="fas fa-flask"></i> <span data-key="exp_neoflex_2">Выполнение комплексного тестирования</span></li>
+                            <li><i class="fas fa-shield-alt"></i> <span data-key="exp_neoflex_3">Управление дефектами и отслеживание качества</span></li>
+                            <li><i class="fas fa-database"></i> <span data-key="exp_neoflex_4">Работа с тестовыми данными</span></li>
+                            <li><i class="fas fa-chart-line"></i> <span data-key="exp_neoflex_5">Отчётность и анализ результатов</span></li>
+                        </ul>
+                        <div class="tech-tags">
+                            <span>Jira</span>
+                            <span>Test design</span>
+                            <span>Manual</span>
+                            <span>Postman</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Проекты (ВОЗВРАЩЁН) -->
+        <section id="projects" class="projects">
+            <div class="section-header">
+                <span class="section-subtitle" data-key="projects_subtitle">Мои работы</span>
+                <h2 class="section-title" data-key="projects_title">Проекты</h2>
+            </div>
+
+            <div class="projects-grid">
+                <!-- Проект Tutu.ru -->
+                <div class="project-card" onclick="window.open('https://github.com/kusteek/tutu-qa-project', '_blank')">
+                    <div class="project-icon">
+                        <i class="fas fa-train"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 data-key="project_tutu_title">Автоматизированное тестирование Tutu.ru</h3>
+                        <p class="project-description" data-key="project_tutu_desc">
+                            Разработка фреймворка для автоматизации тестирования веб-приложения Tutu.ru. 
+                            Включает UI и API тесты с генерацией отчетов.
+                        </p>
+                        <div class="project-tech">
+                            <span>Java</span>
+                            <span>Selenium</span>
+                            <span>JUnit 5</span>
+                            <span>Allure</span>
+                            <span>REST Assured</span>
+                        </div>
+                        <div class="project-link">
+                            <i class="fab fa-github"></i>
+                            <span>github.com/kusteek/tutu-qa-project</span>
+                        </div>
+                        <div class="project-hover">
+                            <span data-key="project_tutu_hover">Открыть на GitHub →</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- Призыв к действию -->
@@ -204,9 +308,57 @@
             </div>
         </section>
 
-        <!-- СЕКЦИИ УДАЛЕНЫ: Опыт, Проекты, Контакты -->
-        <!-- Вместо Контактов можно оставить простой блок с email или убрать ссылку из меню -->
+        <!-- Контакты (ВОЗВРАЩЁН) -->
+        <section id="contact" class="contact">
+            <div class="section-header">
+                <span class="section-subtitle" data-key="contact_subtitle">Свяжитесь со мной</span>
+                <h2 class="section-title" data-key="contact_title">Контакты</h2>
+            </div>
 
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-card" onclick="window.location.href='mailto:lol.kleka2000@mail.ru'">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3>Email</h3>
+                        <span>lol.kleka2000@mail.ru</span>
+                        <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('lol.kleka2000@mail.ru')">
+                            <i class="far fa-copy"></i>
+                        </button>
+                    </div>
+
+                    <div class="contact-card" onclick="window.open('https://t.me/kusteeek', '_blank')">
+                        <div class="contact-icon">
+                            <i class="fab fa-telegram"></i>
+                        </div>
+                        <h3>Telegram</h3>
+                        <span>@kusteeek</span>
+                        <span class="status online" data-key="contact_online">● online</span>
+                    </div>
+
+                    <div class="contact-card" onclick="window.open('https://github.com/kusteek', '_blank')">
+                        <div class="contact-icon">
+                            <i class="fab fa-github"></i>
+                        </div>
+                        <h3>GitHub</h3>
+                        <span>@kusteek</span>
+                        <div class="github-stats">
+                            <span data-key="contact_github_stats">⭐ 5 репозиториев</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h3 data-key="contact_loc_title">Локация</h3>
+                        <span data-key="contact_loc_value">Новосибирск</span>
+                        <span class="stats">UTC+7</span>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
@@ -219,7 +371,7 @@
     </footer>
 
     <script src="script.js"></script>
-    <!-- Добавляем скрипт перевода прямо в этот файл или в script.js -->
+    <!-- Добавляем скрипт перевода -->
     <script>
         (function() {
             // --- Объект с переводами ---
@@ -228,6 +380,9 @@
                     nav_home: 'Главная',
                     nav_about: 'Обо мне',
                     nav_skills: 'Навыки',
+                    nav_experience: 'Опыт',
+                    nav_projects: 'Проекты',
+                    nav_contact: 'Контакты',
                     hero_badge: '🔥 Доступен для работы',
                     hero_hi: 'Привет, я',
                     hero_desc: 'Стремлюсь к постоянному развитию в сфере обеспечения качества и тестирования. Увлечен автоматизацией и поиском новых подходов к улучшению процессов.',
@@ -258,9 +413,36 @@
                     filter_auto: 'Автоматизация',
                     filter_manual: 'Ручное тестирование',
                     filter_tools: 'Инструменты',
+                    exp_subtitle: 'Карьерный путь',
+                    exp_title: 'Опыт работы',
+                    exp_vtb_fulltime: 'Полный день',
+                    exp_vtb_1: 'Проектирование и планирование тестирования',
+                    exp_vtb_2: 'Выполнение комплексного тестирования (функциональное, регрессионное, smoke и т.д.)',
+                    exp_vtb_3: 'Управление дефектами и отслеживание качества',
+                    exp_vtb_4: 'Работа с тестовыми данными и тестовым окружением',
+                    exp_vtb_5: 'Отчётность и анализ результатов тестирования',
+                    exp_vtb_6: 'Интеграция в процессы разработки',
+                    exp_vtb_7: 'Демонстрация функционала заказчику (ПСИ)',
+                    exp_neoflex_duration: '4 месяца',
+                    exp_neoflex_1: 'Проектирование и планирование тестирования',
+                    exp_neoflex_2: 'Выполнение комплексного тестирования',
+                    exp_neoflex_3: 'Управление дефектами и отслеживание качества',
+                    exp_neoflex_4: 'Работа с тестовыми данными',
+                    exp_neoflex_5: 'Отчётность и анализ результатов',
+                    projects_subtitle: 'Мои работы',
+                    projects_title: 'Проекты',
+                    project_tutu_title: 'Автоматизированное тестирование Tutu.ru',
+                    project_tutu_desc: 'Разработка фреймворка для автоматизации тестирования веб-приложения Tutu.ru. Включает UI и API тесты с генерацией отчетов.',
+                    project_tutu_hover: 'Открыть на GitHub →',
                     cta_title: 'Открыт к предложениям!',
                     cta_desc: 'Готов применять свои навыки и развиваться в новой команде',
                     cta_btn: 'Написать мне',
+                    contact_subtitle: 'Свяжитесь со мной',
+                    contact_title: 'Контакты',
+                    contact_online: '● online',
+                    contact_github_stats: '⭐ 5 репозиториев',
+                    contact_loc_title: 'Локация',
+                    contact_loc_value: 'Новосибирск',
                     footer_title: 'QA Инженер',
                     footer_made: 'Сделано с ❤️ в Новосибирске'
                 },
@@ -268,6 +450,9 @@
                     nav_home: 'Home',
                     nav_about: 'About',
                     nav_skills: 'Skills',
+                    nav_experience: 'Experience',
+                    nav_projects: 'Projects',
+                    nav_contact: 'Contact',
                     hero_badge: '🔥 Open for work',
                     hero_hi: "Hi, I'm",
                     hero_desc: 'I strive for continuous development in the field of quality assurance and testing. Passionate about automation and finding new approaches to improve processes.',
@@ -298,9 +483,36 @@
                     filter_auto: 'Automation',
                     filter_manual: 'Manual',
                     filter_tools: 'Tools',
+                    exp_subtitle: 'Career path',
+                    exp_title: 'Work experience',
+                    exp_vtb_fulltime: 'Full-time',
+                    exp_vtb_1: 'Test design and planning',
+                    exp_vtb_2: 'Comprehensive testing (functional, regression, smoke, etc.)',
+                    exp_vtb_3: 'Defect management and quality tracking',
+                    exp_vtb_4: 'Working with test data and test environment',
+                    exp_vtb_5: 'Reporting and analysis of test results',
+                    exp_vtb_6: 'Integration into development processes',
+                    exp_vtb_7: 'Demonstration of functionality to the customer (UAT)',
+                    exp_neoflex_duration: '4 months',
+                    exp_neoflex_1: 'Test design and planning',
+                    exp_neoflex_2: 'Comprehensive testing',
+                    exp_neoflex_3: 'Defect management and quality tracking',
+                    exp_neoflex_4: 'Working with test data',
+                    exp_neoflex_5: 'Reporting and analysis',
+                    projects_subtitle: 'My work',
+                    projects_title: 'Projects',
+                    project_tutu_title: 'Automated testing of Tutu.ru',
+                    project_tutu_desc: 'Development of a framework for automated testing of the Tutu.ru web application. Includes UI and API tests with report generation.',
+                    project_tutu_hover: 'Open on GitHub →',
                     cta_title: "I'm open to offers!",
                     cta_desc: 'Ready to apply my skills and grow in a new team',
                     cta_btn: 'Write me',
+                    contact_subtitle: 'Contact me',
+                    contact_title: 'Contacts',
+                    contact_online: '● online',
+                    contact_github_stats: '⭐ 5 repositories',
+                    contact_loc_title: 'Location',
+                    contact_loc_value: 'Novosibirsk',
                     footer_title: 'QA Engineer',
                     footer_made: 'Made with ❤️ in Novosibirsk'
                 }
@@ -308,13 +520,11 @@
 
             let currentLang = 'ru';
 
-            // --- Функция перевода ---
             function translatePage(lang) {
                 const elements = document.querySelectorAll('[data-key]');
                 elements.forEach(el => {
                     const key = el.getAttribute('data-key');
                     if (translations[lang] && translations[lang][key]) {
-                        // Для input, кнопок и простых элементов
                         if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
                             el.placeholder = translations[lang][key];
                         } else {
@@ -324,37 +534,37 @@
                 });
 
                 // Обновить активное состояние кнопок языка
-                document.querySelector('.lang-ru').classList.toggle('active', lang === 'ru');
-                document.querySelector('.lang-en').classList.toggle('active', lang === 'en');
+                document.querySelector('.lang-ru')?.classList.toggle('active', lang === 'ru');
+                document.querySelector('.lang-en')?.classList.toggle('active', lang === 'en');
 
-                // Сохранить выбранный язык (например, в localStorage)
                 localStorage.setItem('preferredLanguage', lang);
                 currentLang = lang;
+
+                // Если навыки уже загружены динамически, нужно будет их тоже перевести.
+                // Для этого можно вызвать отдельную функцию, которая обновит текст в skillsGrid.
+                // Но это потребует доработки script.js. Если навыки добавляются через JS,
+                // и у них есть data-key, то они тоже будут переведены этим циклом.
+                // Если нет - нужно добавить data-key в код генерации навыков.
+                // Рекомендую в файле script.js при создании карточек навыков добавлять атрибут data-key
+                // с уникальным ключом для каждого навыка и включить их перевод в объект translations.
             }
 
-            // --- Обработчик клика по переключателю ---
+            // Обработчик клика по переключателю языка
             document.addEventListener('DOMContentLoaded', function() {
                 const langToggle = document.getElementById('languageToggle');
                 if (langToggle) {
-                    langToggle.addEventListener('click', function(e) {
-                        // Определяем, на какой язык переключаем
-                        const isCurrentlyRu = document.querySelector('.lang-ru').classList.contains('active');
-                        const newLang = isCurrentlyRu ? 'en' : 'ru';
-                        translatePage(newLang);
+                    langToggle.addEventListener('click', function() {
+                        const isRu = document.querySelector('.lang-ru').classList.contains('active');
+                        translatePage(isRu ? 'en' : 'ru');
                     });
                 }
 
-                // Загрузить сохраненный язык (если есть)
+                // Восстанавливаем сохранённый язык
                 const savedLang = localStorage.getItem('preferredLanguage');
                 if (savedLang && (savedLang === 'en' || savedLang === 'ru')) {
                     translatePage(savedLang);
                 }
-
-                // --- Простая инициализация частиц, если есть в script.js ---
-                // Здесь можно оставить вызов функции initParticles() если она есть в script.js
-                // Но это не обязательно для работы перевода
             });
-
         })();
     </script>
 </body>
