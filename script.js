@@ -4,23 +4,30 @@ const userData = {
     location: 'Новосибирск',
     telegram: '@kusteeek',
     email: 'lol.kleka2000@mail.ru',
-    experience: 2
+    github: 'kusteek',
+    experience: 2,
+    bugs: 247,
+    projects: 12,
+    certificates: 3,
+    streak: 365
 };
 
 // Навыки для отображения
 const skillsData = [
-    { name: { ru: 'Функциональное тестирование', en: 'Functional Testing' }, level: 90, icon: 'fas fa-vial' },
-    { name: { ru: 'Регрессионное тестирование', en: 'Regression Testing' }, level: 90, icon: 'fas fa-rotate' },
-    { name: { ru: 'Интеграционное тестирование', en: 'Integration Testing' }, level: 85, icon: 'fas fa-link' },
-    { name: { ru: 'Smoke тестирование', en: 'Smoke Testing' }, level: 95, icon: 'fas fa-fire' },
-    { name: { ru: 'Jira', en: 'Jira' }, level: 90, icon: 'fab fa-jira' },
-    { name: { ru: 'TestRail', en: 'TestRail' }, level: 85, icon: 'fas fa-tasks' },
-    { name: { ru: 'Postman', en: 'Postman' }, level: 80, icon: 'fas fa-plug' },
-    { name: { ru: 'SQL', en: 'SQL' }, level: 75, icon: 'fas fa-database' },
-    { name: { ru: 'Git', en: 'Git' }, level: 70, icon: 'fab fa-git-alt' },
-    { name: { ru: 'Тест-дизайн', en: 'Test Design' }, level: 85, icon: 'fas fa-pencil-ruler' },
-    { name: { ru: 'Управление дефектами', en: 'Bug Tracking' }, level: 90, icon: 'fas fa-bug' },
-    { name: { ru: 'SDLC', en: 'SDLC' }, level: 85, icon: 'fas fa-code-branch' }
+    { name: { ru: 'Автоматизация (Selenium)', en: 'Automation (Selenium)' }, category: 'automation', level: 85, icon: 'fas fa-robot' },
+    { name: { ru: 'Java', en: 'Java' }, category: 'automation', level: 80, icon: 'fab fa-java' },
+    { name: { ru: 'Python', en: 'Python' }, category: 'automation', level: 70, icon: 'fab fa-python' },
+    { name: { ru: 'JUnit/TestNG', en: 'JUnit/TestNG' }, category: 'automation', level: 85, icon: 'fas fa-vial' },
+    { name: { ru: 'Ручное тестирование', en: 'Manual Testing' }, category: 'manual', level: 95, icon: 'fas fa-clipboard-list' },
+    { name: { ru: 'Тест-дизайн', en: 'Test Design' }, category: 'manual', level: 90, icon: 'fas fa-pencil-ruler' },
+    { name: { ru: 'API тестирование', en: 'API Testing' }, category: 'manual', level: 85, icon: 'fas fa-plug' },
+    { name: { ru: 'Мобильное тестирование', en: 'Mobile Testing' }, category: 'manual', level: 75, icon: 'fas fa-mobile-alt' },
+    { name: { ru: 'Jira', en: 'Jira' }, category: 'tools', level: 90, icon: 'fab fa-jira' },
+    { name: { ru: 'Postman', en: 'Postman' }, category: 'tools', level: 85, icon: 'fas fa-plug' },
+    { name: { ru: 'Git', en: 'Git' }, category: 'tools', level: 80, icon: 'fab fa-git-alt' },
+    { name: { ru: 'Docker', en: 'Docker' }, category: 'tools', level: 70, icon: 'fab fa-docker' },
+    { name: { ru: 'Jenkins', en: 'Jenkins' }, category: 'tools', level: 65, icon: 'fab fa-jenkins' },
+    { name: { ru: 'SQL', en: 'SQL' }, category: 'tools', level: 75, icon: 'fas fa-database' }
 ];
 
 // Переводы
@@ -31,54 +38,50 @@ const translations = {
         nav_skills: 'Навыки',
         nav_experience: 'Опыт',
         nav_contact: 'Контакты',
-        available: 'Доступен для работы',
+        available: '🔥 Доступен для работы',
         hello: 'Привет, я',
-        description: 'Превращаю сложные баги в идеальный пользовательский опыт. Специализируюсь на обеспечении качества и тестировании.',
+        description: 'Превращаю сложные баги в идеальный пользовательский опыт. Специализируюсь на автоматизации и обеспечении качества.',
         contact_me: 'Связаться со мной',
-        years: 'Года опыта',
-        bugs: '+ багов',
-        projects: 'проекта',
+        years: 'года опыта',
+        bugs: 'найдено багов',
+        projects: 'проектов',
+        certificates: 'сертификата',
         bug_hunter: 'Bug Hunter',
-        qa_engineer: 'QA Engineer',
+        auto_qa: 'Auto QA',
         quality: 'Quality',
         who_i_am: 'Кто я',
         about_me: 'Обо мне',
-        about_highlight: 'QA-инженер с фокусом на обеспечение качества и тестирование программного обеспечения',
-        about_text: 'За 2 года работы в IT участвовал в тестировании различных проектов, от стартапов до крупных банковских систем. Специализируюсь на функциональном, регрессионном и интеграционном тестировании. Постоянно развиваюсь и применяю лучшие практики в работе.',
+        about_highlight: 'QA-инженер с фокусом на автоматизацию и обеспечение качества',
+        about_text: 'За 2 года работы в IT помог 5+ проектам выйти на новый уровень качества. Специализируюсь на автоматизации тестирования, внедрении CI/CD и оптимизации процессов тестирования. Имею сертификаты ISTQB и AWS.',
         feature_1: 'Опыт работы с банковскими системами',
         feature_2: 'Участие в ПСИ с заказчиками',
-        feature_3: 'Знание SDLC и методологий разработки',
+        feature_3: 'Наставничество для джунов',
+        feature_4: 'Open Source контрибьютор',
         location: 'Локация',
         languages: 'Языки',
         russian: 'Русский',
         english: 'English',
-        interests: 'Интересы',
-        interest_1: 'Тестирование',
-        interest_2: 'Качество ПО',
-        interest_3: 'Автоматизация',
+        coding: 'Кодинг',
         what_i_can: 'Что я умею',
         skills: 'Навыки',
         career_path: 'Карьерный путь',
         experience: 'Опыт работы',
-        vtb_1: 'Проектирование и планирование процессов тестирования, включая разработку тестовой стратегии, подготовку тест-планов, тест-кейсов и чек-листов',
-        vtb_2: 'Выполнение комплексного тестирования ПО: функционального, регрессионного, smoke, интеграционного, повторное тестирование дефектов',
-        vtb_3: 'Управление дефектами: регистрация, приоритизация, отслеживание статусов багов и контроль качества продукта',
-        vtb_4: 'Работа с тестовыми данными и поддержка тестового окружения, подготовка конфигураций и сценариев',
-        vtb_5: 'Подготовка отчётности, анализ проблем, оценка рисков и формирование рекомендаций по улучшению качества',
-        vtb_6: 'Интеграция процессов тестирования в SDLC, взаимодействие с разработчиками, аналитиками и менеджерами',
-        vtb_7: 'Участие в демонстрациях функционала заказчику (ПСИ), подготовка сценариев и сопровождение приемочного тестирования',
-        vtb_8: 'Участие в улучшении процессов тестирования, оптимизация тестовых сценариев, внедрение новых практик контроля качества',
-        neoflex_1: 'Проектирование и планирование тестирования',
-        neoflex_2: 'Выполнение комплексного тестирования (функциональное, регрессионное, smoke и т.д.)',
-        neoflex_3: 'Управление дефектами и отслеживание качества',
-        neoflex_4: 'Работа с тестовыми данными и тестовым окружением',
-        neoflex_5: 'Отчётность и анализ результатов тестирования',
-        neoflex_6: 'Интеграция в процессы разработки',
-        neoflex_7: 'Демонстрация функционала заказчику (ПСИ)',
+        vtb_1: 'Нашел 150+ критических багов до продакшена',
+        vtb_2: 'Ускорил регрессионное тестирование на 40%',
+        vtb_3: 'Обучил 2х джуниор QA',
+        vtb_4: 'Внедрил метрики качества',
+        neoflex_1: 'Написал 200+ тест-кейсов',
+        neoflex_2: 'Автоматизировал 50+ smoke тестов',
+        neoflex_3: 'Участвовал в 3 релизах',
+        my_certs: 'Мои сертификаты',
+        certificates_title: 'Сертификаты',
         get_in_touch: 'Свяжитесь со мной',
         contacts: 'Контакты',
-        online: 'online',
-        qa_engineer_footer: 'QA Инженер'
+        cta_title: 'Готов к новым вызовам!',
+        cta_text: 'Ищу команду, где смогу применить свои навыки и вырасти до Senior QA',
+        cta_button: 'Пригласить на собеседование',
+        qa_engineer_footer: 'QA Инженер',
+        online: 'online'
     },
     en: {
         nav_home: 'Home',
@@ -86,58 +89,55 @@ const translations = {
         nav_skills: 'Skills',
         nav_experience: 'Experience',
         nav_contact: 'Contact',
-        available: 'Available for work',
+        available: '🔥 Available for work',
         hello: "Hi, I'm",
-        description: 'Turning complex bugs into perfect user experience. Specializing in quality assurance and testing.',
+        description: 'Turning complex bugs into perfect user experience. Specializing in automation and quality assurance.',
         contact_me: 'Contact me',
-        years: 'Years exp',
-        bugs: '+ bugs',
+        years: 'years exp',
+        bugs: 'bugs found',
         projects: 'projects',
+        certificates: 'certificates',
         bug_hunter: 'Bug Hunter',
-        qa_engineer: 'QA Engineer',
+        auto_qa: 'Auto QA',
         quality: 'Quality',
         who_i_am: 'Who I am',
         about_me: 'About me',
-        about_highlight: 'QA Engineer focused on quality assurance and software testing',
-        about_text: 'In 2 years in IT, I participated in testing various projects, from startups to large banking systems. I specialize in functional, regression and integration testing. Constantly improving and applying best practices.',
+        about_highlight: 'QA Engineer focused on automation and quality assurance',
+        about_text: 'In 2 years in IT, helped 5+ projects improve their quality. Specializing in test automation, CI/CD implementation and testing process optimization. Certified ISTQB and AWS.',
         feature_1: 'Experience with banking systems',
-        feature_2: 'Participation in UAT with clients',
-        feature_3: 'Knowledge of SDLC and development methodologies',
+        feature_2: 'UAT participation with clients',
+        feature_3: 'Mentoring juniors',
+        feature_4: 'Open Source contributor',
         location: 'Location',
         languages: 'Languages',
         russian: 'Russian',
         english: 'English',
-        interests: 'Interests',
-        interest_1: 'Testing',
-        interest_2: 'Quality',
-        interest_3: 'Automation',
+        coding: 'Coding',
         what_i_can: 'What I can do',
         skills: 'Skills',
         career_path: 'Career path',
         experience: 'Experience',
-        vtb_1: 'Design and planning of testing processes, including test strategy development, test plans, test cases and checklists',
-        vtb_2: 'Comprehensive software testing: functional, regression, smoke, integration, defect retesting',
-        vtb_3: 'Defect management: registration, prioritization, bug status tracking and product quality control',
-        vtb_4: 'Test data management and test environment support, configuration and scenario preparation',
-        vtb_5: 'Reporting, problem analysis, risk assessment and quality improvement recommendations',
-        vtb_6: 'Integration of testing processes into SDLC, interaction with developers, analysts and managers',
-        vtb_7: 'Participation in functionality demos to the customer (UAT), scenario preparation and acceptance testing support',
-        vtb_8: 'Participation in improving testing processes, optimization of test scenarios, implementation of new quality control practices',
-        neoflex_1: 'Test design and planning',
-        neoflex_2: 'Comprehensive testing (functional, regression, smoke, etc.)',
-        neoflex_3: 'Defect management and quality tracking',
-        neoflex_4: 'Test data and test environment management',
-        neoflex_5: 'Reporting and test results analysis',
-        neoflex_6: 'Integration into development processes',
-        neoflex_7: 'Functionality demonstration to the customer (UAT)',
+        vtb_1: 'Found 150+ critical bugs before production',
+        vtb_2: 'Sped up regression testing by 40%',
+        vtb_3: 'Trained 2 junior QAs',
+        vtb_4: 'Implemented quality metrics',
+        neoflex_1: 'Wrote 200+ test cases',
+        neoflex_2: 'Automated 50+ smoke tests',
+        neoflex_3: 'Participated in 3 releases',
+        my_certs: 'My certificates',
+        certificates_title: 'Certificates',
         get_in_touch: 'Get in touch',
         contacts: 'Contacts',
-        online: 'online',
-        qa_engineer_footer: 'QA Engineer'
+        cta_title: 'Ready for new challenges!',
+        cta_text: 'Looking for a team where I can apply my skills and grow to Senior QA',
+        cta_button: 'Invite for interview',
+        qa_engineer_footer: 'QA Engineer',
+        online: 'online'
     }
 };
 
 let currentLanguage = 'ru';
+let typedInterval;
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
@@ -147,6 +147,10 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeNavbar();
     initializeThemeToggle();
     initializeLanguageToggle();
+    initializeStatsCounter();
+    initializeResumeModal();
+    initializeLiveData();
+    initializeScrollAnimations();
     applyTranslations();
     
     // Проверяем сохраненные настройки
@@ -179,6 +183,13 @@ function initializeParticles() {
     
     const ctx = canvas.getContext('2d');
     let particles = [];
+    let mouseX = 0;
+    let mouseY = 0;
+    
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
     
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -192,16 +203,34 @@ function initializeParticles() {
         constructor() {
             this.x = Math.random() * canvas.width;
             this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2 + 1;
-            this.speedX = Math.random() * 0.3 - 0.15;
-            this.speedY = Math.random() * 0.3 - 0.15;
-            this.color = `rgba(108, 92, 231, ${Math.random() * 0.2 + 0.1})`;
+            this.size = Math.random() * 3 + 1;
+            this.speedX = Math.random() * 0.5 - 0.25;
+            this.speedY = Math.random() * 0.5 - 0.25;
+            this.baseColor = `rgba(108, 92, 231, ${Math.random() * 0.3 + 0.1})`;
+            this.color = this.baseColor;
         }
         
         update() {
+            // Движение
             this.x += this.speedX;
             this.y += this.speedY;
             
+            // Отталкивание от мыши
+            const dx = mouseX - this.x;
+            const dy = mouseY - this.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < 100) {
+                const angle = Math.atan2(dy, dx);
+                const force = (100 - distance) / 100;
+                this.x -= Math.cos(angle) * force * 2;
+                this.y -= Math.sin(angle) * force * 2;
+                this.color = `rgba(255, 100, 100, ${Math.random() * 0.5 + 0.3})`;
+            } else {
+                this.color = this.baseColor;
+            }
+            
+            // Границы
             if (this.x > canvas.width) this.x = 0;
             if (this.x < 0) this.x = canvas.width;
             if (this.y > canvas.height) this.y = 0;
@@ -213,12 +242,28 @@ function initializeParticles() {
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             ctx.fill();
+            
+            // Соединяем близкие частицы
+            particles.forEach(particle => {
+                const dx = this.x - particle.x;
+                const dy = this.y - particle.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 100) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(108, 92, 231, ${0.1 * (1 - distance/100)})`;
+                    ctx.lineWidth = 1;
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(particle.x, particle.y);
+                    ctx.stroke();
+                }
+            });
         }
     }
     
     function init() {
         particles = [];
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 100; i++) {
             particles.push(new Particle());
         }
     }
@@ -244,8 +289,8 @@ function initializeTypedText() {
     if (!typedTextElement) return;
     
     const words = {
-        ru: ['Инженер', 'Тестировщик', 'Специалист'],
-        en: ['Engineer', 'Tester', 'Specialist']
+        ru: ['Инженер', 'Тестировщик', 'Автоматизатор', 'Специалист'],
+        en: ['Engineer', 'Tester', 'Automator', 'Specialist']
     };
     let wordIndex = 0;
     let charIndex = 0;
@@ -283,20 +328,140 @@ function initializeSkills() {
     const skillsGrid = document.getElementById('skillsGrid');
     if (!skillsGrid) return;
 
-    skillsGrid.innerHTML = skillsData.map(skill => {
-        const name = skill.name[currentLanguage] || skill.name.ru;
-        return `
-            <div class="skill-item">
-                <div class="skill-name">
-                    <i class="${skill.icon}"></i>
-                    <span>${name}</span>
+    function renderSkills(category = 'all') {
+        const filteredSkills = category === 'all' 
+            ? skillsData 
+            : skillsData.filter(skill => skill.category === category);
+
+        skillsGrid.innerHTML = filteredSkills.map(skill => {
+            const name = skill.name[currentLanguage] || skill.name.ru;
+            return `
+                <div class="skill-item" data-category="${skill.category}">
+                    <div class="skill-name">
+                        <i class="${skill.icon}"></i>
+                        <span>${name}</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="width: 0%"></div>
+                    </div>
                 </div>
-                <div class="skill-bar">
-                    <div class="skill-progress" style="width: ${skill.level}%"></div>
-                </div>
-            </div>
-        `;
-    }).join('');
+            `;
+        }).join('');
+
+        // Анимируем заполнение
+        setTimeout(() => {
+            document.querySelectorAll('.skill-item').forEach((item, index) => {
+                const progress = item.querySelector('.skill-progress');
+                const level = filteredSkills[index].level;
+                setTimeout(() => {
+                    progress.style.width = level + '%';
+                }, index * 100);
+            });
+        }, 100);
+    }
+
+    renderSkills();
+
+    // Фильтрация
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderSkills(btn.dataset.filter);
+        });
+    });
+}
+
+// Анимация счетчиков
+function initializeStatsCounter() {
+    const statNumbers = document.querySelectorAll('.stat-number');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = parseInt(entry.target.getAttribute('data-target'));
+                animateNumber(entry.target, 0, target, 2000);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    statNumbers.forEach(stat => {
+        observer.observe(stat);
+    });
+}
+
+function animateNumber(element, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        element.textContent = Math.floor(progress * (end - start) + start);
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        }
+    };
+    window.requestAnimationFrame(step);
+}
+
+// Навигация
+function initializeNavbar() {
+    const navbar = document.querySelector('.navbar');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section');
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-links');
+
+    if (!hamburger || !navMenu) return;
+
+    window.addEventListener('scroll', () => {
+        // Эффект для навбара
+        if (window.scrollY > 100) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+
+        // Активная ссылка
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - 100;
+            const sectionHeight = section.clientHeight;
+            if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
+    });
+
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+            
+            if (targetSection) {
+                targetSection.scrollIntoView({ behavior: 'smooth' });
+                
+                if (navMenu.classList.contains('active')) {
+                    navMenu.classList.remove('active');
+                    hamburger.classList.remove('active');
+                }
+            }
+        });
+    });
 }
 
 // Переключение темы
@@ -380,58 +545,90 @@ function applyTranslations() {
     const floatingCards = document.querySelectorAll('.floating-card span');
     if (floatingCards.length >= 3) {
         floatingCards[0].textContent = translations[currentLanguage].bug_hunter;
-        floatingCards[1].textContent = translations[currentLanguage].qa_engineer;
+        floatingCards[1].textContent = translations[currentLanguage].auto_qa;
         floatingCards[2].textContent = translations[currentLanguage].quality;
     }
 }
 
-// Навигация
-function initializeNavbar() {
-    const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('section');
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-links');
-
-    if (!hamburger || !navMenu) return;
-
-    window.addEventListener('scroll', () => {
-        let current = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop - 100;
-            const sectionHeight = section.clientHeight;
-            if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${current}`) {
-                link.classList.add('active');
-            }
-        });
+// Модальное окно для резюме
+function initializeResumeModal() {
+    const modal = document.getElementById('resumeModal');
+    const downloadBtn = document.getElementById('downloadResume');
+    const closeBtn = document.querySelector('.close-modal');
+    
+    if (!modal || !downloadBtn) return;
+    
+    downloadBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        modal.classList.add('active');
     });
-
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+    }
+    
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+        }
     });
+    
+    // Кнопки скачивания (заглушки)
+    document.getElementById('downloadPDF')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        showNotification(currentLanguage === 'ru' ? 'PDF готовится...' : 'PDF is preparing...');
+    });
+    
+    document.getElementById('downloadDOCX')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        showNotification(currentLanguage === 'ru' ? 'DOCX готовится...' : 'DOCX is preparing...');
+    });
+    
+    document.getElementById('viewOnline')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        showNotification(currentLanguage === 'ru' ? 'Открываю онлайн версию...' : 'Opening online version...');
+    });
+}
 
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = link.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
-            
-            if (targetSection) {
-                targetSection.scrollIntoView({ behavior: 'smooth' });
-                
-                if (navMenu.classList.contains('active')) {
-                    navMenu.classList.remove('active');
-                    hamburger.classList.remove('active');
-                }
+// Живые данные
+function initializeLiveData() {
+    const lastCommit = document.getElementById('lastCommit');
+    const viewers = document.getElementById('viewers');
+    
+    if (lastCommit) {
+        const updateLastCommit = () => {
+            const hours = Math.floor(Math.random() * 5) + 1;
+            lastCommit.textContent = hours + (currentLanguage === 'ru' ? ' часа назад' : ' hours ago');
+        };
+        setInterval(updateLastCommit, 30000);
+    }
+    
+    if (viewers) {
+        const updateViewers = () => {
+            const count = Math.floor(Math.random() * 5) + 2;
+            viewers.textContent = count;
+        };
+        setInterval(updateViewers, 10000);
+    }
+}
+
+// Анимации при скролле
+function initializeScrollAnimations() {
+    const animatedElements = document.querySelectorAll('.fade-in, .fade-in-up, .slide-in-left, .slide-in-right, .scale-in, .rotate-in');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animationPlayState = 'running';
             }
         });
+    }, { threshold: 0.1 });
+
+    animatedElements.forEach(el => {
+        el.style.animationPlayState = 'paused';
+        observer.observe(el);
     });
 }
 
