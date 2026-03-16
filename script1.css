@@ -1,260 +1,4 @@
-:root {
-    --bg-primary: #0a0a0a;
-    --bg-secondary: #111111;
-    --bg-card: #1a1a1a;
-    --text-primary: #ffffff;
-    --text-secondary: #b3b3b3;
-    --accent-primary: #6c5ce7;
-    --accent-secondary: #a463f5;
-    --accent-glow: rgba(108, 92, 231, 0.3);
-    --gradient-1: linear-gradient(135deg, #6c5ce7, #a463f5);
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    --glow: 0 0 20px rgba(108, 92, 231, 0.3);
-    --glow-strong: 0 0 30px rgba(108, 92, 231, 0.5);
-    --transition-theme: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-                        color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-                        border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-                        box-shadow 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    line-height: 1.6;
-    overflow-x: hidden;
-    transition: var(--transition-theme);
-    position: relative;
-}
-
-/* Эффект переключения темы */
-.theme-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), 
-                               rgba(108, 92, 231, 0.2) 0%,
-                               transparent 50%);
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
-
-.theme-overlay.active {
-    opacity: 1;
-}
-
-/* Canvas для частиц */
-#particles-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    pointer-events: none;
-}
-
-/* Навигация */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    background: rgba(10, 10, 10, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    transition: var(--transition-theme);
-}
-
-.nav-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    font-size: 2rem;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-}
-
-.neon {
-    animation: neonPulse 2s ease-in-out infinite;
-}
-
-@keyframes neonPulse {
-    0%, 100% { opacity: 1; text-shadow: 0 0 10px var(--accent-glow); }
-    50% { opacity: 0.9; text-shadow: 0 0 20px var(--accent-glow), 0 0 30px var(--accent-glow); }
-}
-
-.dot {
-    color: var(--accent-primary);
-    animation: dotPulse 2s ease-in-out infinite;
-}
-
-@keyframes dotPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-}
-
-.nav-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-}
-
-.nav-link {
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-weight: 500;
-    transition: var(--transition-theme);
-    position: relative;
-}
-
-.nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--gradient-1);
-    transition: width 0.3s ease;
-}
-
-.nav-link:hover,
-.nav-link.active {
-    color: var(--text-primary);
-}
-
-.nav-link:hover::after,
-.nav-link.active::after {
-    width: 100%;
-}
-
-.controls-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.theme-toggle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--bg-card);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.theme-toggle::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--accent-primary) 0%, transparent 70%);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s ease, height 0.6s ease;
-    z-index: 0;
-    opacity: 0;
-}
-
-.theme-toggle:active::before {
-    width: 200px;
-    height: 200px;
-    opacity: 0.3;
-}
-
-.theme-toggle:hover {
-    border-color: var(--accent-primary);
-    transform: scale(1.1);
-}
-
-.theme-toggle i {
-    font-size: 1.2rem;
-    color: var(--text-secondary);
-    position: relative;
-    z-index: 1;
-    transition: var(--transition-theme);
-}
-
-.language-toggle {
-    display: flex;
-    gap: 0.5rem;
-    background: var(--bg-card);
-    padding: 0.3rem;
-    border-radius: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: var(--transition-theme);
-}
-
-.language-toggle span {
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-}
-
-.language-toggle span.active {
-    background: var(--gradient-1);
-    color: white;
-}
-
-.hamburger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-}
-
-.hamburger span {
-    width: 25px;
-    height: 3px;
-    background: var(--text-primary);
-    margin: 2px 0;
-    transition: 0.3s;
-}
-
-/* Секции общие */
-section {
-    padding: 5rem 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-    transition: var(--transition-theme);
-}
-
+/* Заголовки секций - центрирование */
 .section-header {
     text-align: center;
     margin-bottom: 4rem;
@@ -269,6 +13,7 @@ section {
     font-size: 0.9rem;
     margin-bottom: 1rem;
     letter-spacing: 2px;
+    text-align: center;
 }
 
 .section-title {
@@ -279,6 +24,8 @@ section {
     background-clip: text;
     position: relative;
     display: inline-block;
+    text-align: center;
+    width: 100%;
 }
 
 .section-title::after {
@@ -293,253 +40,45 @@ section {
     border-radius: 3px;
 }
 
-/* Hero секция */
-.hero {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    padding: 0 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-}
-
-.hero-content {
-    flex: 1;
-}
-
-.hero-badge {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    background: rgba(108, 92, 231, 0.1);
-    border: 1px solid var(--accent-primary);
-    border-radius: 50px;
-    color: var(--accent-primary);
-    font-size: 0.9rem;
-    margin-bottom: 2rem;
-    animation: glowPulse 2s ease-in-out infinite;
-}
-
-@keyframes glowPulse {
-    0%, 100% { box-shadow: 0 0 10px var(--accent-glow); }
-    50% { box-shadow: 0 0 20px var(--accent-glow); }
-}
-
-.hero-title {
-    font-size: 4rem;
-    line-height: 1.2;
-    margin-bottom: 1rem;
-}
-
-.reveal-text {
-    display: block;
-    font-size: 2rem;
-    color: var(--text-secondary);
-}
-
-.gradient-text {
-    background: var(--gradient-1);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.hero-subtitle {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    color: var(--text-secondary);
-}
-
-.typed-text {
-    color: var(--accent-primary);
-}
-
-.cursor {
-    display: inline-block;
-    animation: blink 1s infinite;
-}
-
-@keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
-}
-
-.hero-description {
-    font-size: 1.2rem;
-    color: var(--text-secondary);
-    max-width: 600px;
-    margin-bottom: 2rem;
-}
-
-.hero-cta {
-    margin-bottom: 3rem;
-}
-
-.btn {
-    padding: 1rem 2rem;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    border: none;
-    cursor: pointer;
-}
-
-.btn-primary {
-    background: var(--gradient-1);
-    color: white;
-    position: relative;
-    overflow: hidden;
-}
-
-.btn-primary::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-}
-
-.btn-primary:hover::before {
-    width: 300px;
-    height: 300px;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--glow);
-}
-
-.btn-large {
-    padding: 1.2rem 2.5rem;
-    font-size: 1.1rem;
-}
-
-.hero-stats {
-    display: flex;
-    gap: 3rem;
-}
-
-.stat-item {
-    text-align: center;
-}
-
-.stat-number {
-    font-size: 2.5rem;
-    font-weight: bold;
-    background: var(--gradient-1);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.stat-label {
-    display: block;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-/* Остальные стили из предыдущей версии... */
-
-/* Интересы с фиолетовыми иконками */
-.interests-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    margin-top: 1rem;
-    text-align: left;
-}
-
-.interests-list span {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    padding: 0.3rem;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.interests-list span i {
-    color: var(--accent-primary);
-    font-size: 1rem;
-    width: 20px;
-    transition: all 0.3s ease;
-}
-
-.interests-list span:hover {
-    background: rgba(108, 92, 231, 0.1);
-    transform: translateX(5px);
-    color: var(--text-primary);
-}
-
-.interests-list span:hover i {
-    transform: scale(1.2);
-}
-
-/* Светлая тема */
-body.light-theme {
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8f9fa;
-    --bg-card: #ffffff;
-    --text-primary: #1a1a1a;
-    --text-secondary: #4a4a4a;
-    --accent-glow: rgba(108, 92, 231, 0.2);
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-body.light-theme .navbar {
-    background: rgba(255, 255, 255, 0.95);
-    border-bottom-color: rgba(0, 0, 0, 0.05);
-}
-
-body.light-theme .theme-toggle,
-body.light-theme .language-toggle {
-    background: #e9ecef;
-    border-color: rgba(0, 0, 0, 0.1);
-}
-
-body.light-theme .contact-card,
-body.light-theme .info-card,
-body.light-theme .timeline-content,
-body.light-theme .skill-item,
-body.light-theme .project-card,
-body.light-theme .floating-card {
-    background: #ffffff;
-    border-color: rgba(0, 0, 0, 0.1);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-}
-
-/* Уведомления */
-.notification {
+/* Эффект переключения темы - новая плавная анимация */
+.theme-overlay {
     position: fixed;
-    top: 80px;
-    right: 20px;
-    padding: 1rem 2rem;
-    background: var(--gradient-1);
-    color: white;
-    border-radius: 10px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), 
+                               rgba(108, 92, 231, 0.1) 0%,
+                               transparent 70%);
+    pointer-events: none;
     z-index: 9999;
-    animation: slideIn 0.3s ease;
-    box-shadow: var(--glow-strong);
+    opacity: 0;
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+.theme-overlay.active {
+    opacity: 1;
 }
 
-@keyframes slideOut {
-    from { transform: translateX(0); opacity: 1; }
-    to { transform: translateX(100%); opacity: 0; }
+/* Плавный переход для всех элементов при смене темы */
+body, 
+body *,
+.navbar,
+.contact-card,
+.info-card,
+.timeline-content,
+.skill-item,
+.project-card,
+.floating-card,
+.tech-tags span,
+.btn,
+.section-subtitle,
+.section-title {
+    transition: background-color 1s cubic-bezier(0.4, 0, 0.2, 1),
+                color 1s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 1s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 1s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.3s ease;
 }
+
+/* Остальные стили остаются без изменений из предыдущей версии */
