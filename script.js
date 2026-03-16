@@ -1,4 +1,4 @@
-// ===== Particles.js Effect =====
+// ===== Particles.js Effect с улучшенным взаимодействием =====
 class ParticlesNetwork {
     constructor(canvasId) {
         this.canvas = document.getElementById(canvasId);
@@ -6,10 +6,15 @@ class ParticlesNetwork {
         
         this.ctx = this.canvas.getContext('2d');
         this.particles = [];
-        this.particleCount = 80;
+        this.particleCount = 120; // Увеличено для лучшего эффекта
         this.mouseX = 0;
         this.mouseY = 0;
         this.isMouseInside = false;
+        this.mouseRadius = 200; // Радиус влияния курсора
+        this.mouseForce = 0.8; // Сила взаимодействия
+        this.targetMouseX = 0;
+        this.targetMouseY = 0;
+        this.mouseVelocity = { x: 0, y: 0 };
 
         this.init();
         this.animate();
@@ -28,65 +33,158 @@ class ParticlesNetwork {
 
     createParticles() {
         for (let i = 0; i < this.particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 0.2 + Math.random() * 0.5;
             this.particles.push({
                 x: Math.random() * this.canvas.width,
                 y: Math.random() * this.canvas.height,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
-                radius: Math.random() * 2 + 1
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                radius: Math.random() * 3 + 1.5,
+                baseRadius: Math.random() * 3 + 1.5,
+                color: `hsl(${250 + Math.random() * 20}, 70%, 60%)`,
+                angle: angle,
+                speed: speed,
+                oscillation: Math.random() * Math.PI * 2,
+                life: 1
             });
         }
     }
 
     drawParticles() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.fillStyle = document.body.classList.contains('light-theme') ? '#6c5ce7' : '#a29bfe';
         
-        for (let particle of this.particles) {
-            this.ctx.beginPath();
-            this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-            this.ctx.fillStyle = document.body.classList.contains('light-theme') ? '#6c5ce7' : '#a29bfe';
-            this.ctx.fill();
-
-            // Draw connections
-            for (let other of this.particles) {
-                const dx = particle.x - other.x;
-                const dy = particle.y - other.y;
+        const theme = document.body.classList.contains('light-theme') ? 'light' : 'dark';
+        
+        // Рисуем соединения между частицами
+        this.ctx.lineWidth = 0.5;
+        
+        for (let i = 0; i < this.particles.length; i++) {
+            for (let j = i + 1; j < this.particles.length; j++) {
+                const dx = this.particles[i].x - this.particles[j].x;
+                const dy = this.particles[i].y - this.particles[j].y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
-                if (distance < 100) {
+                if (distance < 150) {
+                    const opacity = (1 - distance / 150) * 0.25;
                     this.ctx.beginPath();
-                    this.ctx.strokeStyle = document.body.classList.contains('light-theme') ? '#6c5ce7' : '#a29bfe';
-                    this.ctx.lineWidth = 0.2;
-                    this.ctx.moveTo(particle.x, particle.y);
-                    this.ctx.lineTo(other.x, other.y);
+                    this.ctx.strokeStyle = theme === 'light' 
+                        ? `rgba(108, 92, 231, ${opacity})` 
+                        : `rgba(162, 155, 254, ${opacity})`;
+                    this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
+                    this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
                     this.ctx.stroke();
                 }
             }
+        }
 
-            // Mouse interaction
+        // Рисуем частицы
+        for (let particle of this.particles) {
+            // Эффект пульсации
+            particle.oscillation += 0.02;
+            const pulse = Math.sin(particle.oscillation) * 0.3 + 1;
+            
+            let radius = particle.baseRadius * pulse;
+            let x = particle.x;
+            let y = particle.y;
+            
+            // Взаимодействие с курсором
             if (this.isMouseInside) {
                 const dx = particle.x - this.mouseX;
                 const dy = particle.y - this.mouseY;
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 
-                if (distance < 100) {
+                if (distance < this.mouseRadius) {
+                    // Сила взаимодействия зависит от расстояния
+                    const force = (1 - distance / this.mouseRadius) * this.mouseForce;
+                    
+                    // Отталкивание от курсора
                     const angle = Math.atan2(dy, dx);
-                    const force = (100 - distance) / 100;
-                    particle.x += Math.cos(angle) * force * 2;
-                    particle.y += Math.sin(angle) * force * 2;
+                    const repelX = Math.cos(angle) * force * 3;
+                    const repelY = Math.sin(angle) * force * 3;
+                    
+                    // Применяем силу к частице
+                    particle.vx += repelX;
+                    particle.vy += repelY;
+                    
+                    // Увеличиваем радиус при приближении
+                    radius *= (1 + force * 0.5);
+                    
+                    // Добавляем эффект "испуга"
+                    if (force > 0.3) {
+                        const scatterAngle = angle + (Math.random() - 0.5) * 0.5;
+                        particle.vx += Math.cos(scatterAngle) * force * 2;
+                        particle.vy += Math.sin(scatterAngle) * force * 2;
+                    }
                 }
             }
+            
+            // Ограничиваем скорость
+            const maxSpeed = 3;
+            const speed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
+            if (speed > maxSpeed) {
+                particle.vx = (particle.vx / speed) * maxSpeed;
+                particle.vy = (particle.vy / speed) * maxSpeed;
+            }
+            
+            // Рисуем частицу с градиентом
+            const gradient = this.ctx.createRadialGradient(
+                x - radius * 0.3, 
+                y - radius * 0.3, 
+                radius * 0.3,
+                x, 
+                y, 
+                radius * 1.5
+            );
+            
+            if (theme === 'light') {
+                gradient.addColorStop(0, '#6c5ce7');
+                gradient.addColorStop(1, '#a363d9');
+            } else {
+                gradient.addColorStop(0, '#a29bfe');
+                gradient.addColorStop(1, '#6c5ce7');
+            }
+            
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, radius, 0, Math.PI * 2);
+            this.ctx.fillStyle = gradient;
+            this.ctx.fill();
+
+            // Добавляем блик
+            this.ctx.beginPath();
+            this.ctx.arc(x - radius * 0.3, y - radius * 0.3, radius * 0.3, 0, Math.PI * 2);
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            this.ctx.fill();
         }
     }
 
     updateParticles() {
         for (let particle of this.particles) {
+            // Естественное движение
             particle.x += particle.vx;
             particle.y += particle.vy;
 
-            if (particle.x < 0 || particle.x > this.canvas.width) particle.vx *= -1;
-            if (particle.y < 0 || particle.y > this.canvas.height) particle.vy *= -1;
+            // Затухание скорости (трение)
+            particle.vx *= 0.99;
+            particle.vy *= 0.99;
+
+            // Границы с отскоком
+            if (particle.x < 0) {
+                particle.x = 0;
+                particle.vx *= -0.8;
+            }
+            if (particle.x > this.canvas.width) {
+                particle.x = this.canvas.width;
+                particle.vx *= -0.8;
+            }
+            if (particle.y < 0) {
+                particle.y = 0;
+                particle.vy *= -0.8;
+            }
+            if (particle.y > this.canvas.height) {
+                particle.y = this.canvas.height;
+                particle.vy *= -0.8;
+            }
         }
     }
 
@@ -100,14 +198,27 @@ class ParticlesNetwork {
         window.addEventListener('resize', () => this.resize());
 
         this.canvas.addEventListener('mousemove', (e) => {
-            this.mouseX = e.clientX;
-            this.mouseY = e.clientY;
+            // Плавное движение курсора
+            this.targetMouseX = e.clientX;
+            this.targetMouseY = e.clientY;
             this.isMouseInside = true;
+            
+            // Вычисляем скорость движения мыши
+            this.mouseVelocity.x = this.targetMouseX - this.mouseX;
+            this.mouseVelocity.y = this.targetMouseY - this.mouseY;
         });
 
         this.canvas.addEventListener('mouseleave', () => {
             this.isMouseInside = false;
         });
+        
+        // Плавное обновление позиции мыши
+        setInterval(() => {
+            if (this.isMouseInside) {
+                this.mouseX += (this.targetMouseX - this.mouseX) * 0.1;
+                this.mouseY += (this.targetMouseY - this.mouseY) * 0.1;
+            }
+        }, 16);
     }
 }
 
@@ -150,7 +261,7 @@ class TypedText {
     }
 }
 
-// ===== Theme Toggle (с более плавной анимацией) =====
+// ===== Theme Toggle =====
 class ThemeManager {
     constructor() {
         this.themeToggle = document.getElementById('themeToggle');
@@ -161,7 +272,6 @@ class ThemeManager {
     }
 
     init() {
-        // Check for saved theme preference
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'light') {
             this.body.classList.add('light-theme');
@@ -172,14 +282,11 @@ class ThemeManager {
     }
 
     toggleTheme() {
-        // Add overlay effect
         this.themeOverlay.classList.add('active');
         
-        // Более плавное переключение с задержкой
         setTimeout(() => {
             this.body.classList.toggle('light-theme');
             
-            // Save preference
             if (this.body.classList.contains('light-theme')) {
                 localStorage.setItem('theme', 'light');
                 this.updateIcon('sun');
@@ -188,7 +295,6 @@ class ThemeManager {
                 this.updateIcon('moon');
             }
             
-            // Даем оверлею немного "подержаться" перед исчезновением
             setTimeout(() => {
                 this.themeOverlay.classList.remove('active');
             }, 400);
@@ -201,7 +307,7 @@ class ThemeManager {
     }
 }
 
-// ===== Language Manager (ПОЛНОСТЬЮ ИСПРАВЛЕН) =====
+// ===== Language Manager =====
 class LanguageManager {
     constructor() {
         this.langToggle = document.getElementById('languageToggle');
@@ -209,18 +315,14 @@ class LanguageManager {
         this.langEn = document.querySelector('.lang-en');
         this.currentLang = localStorage.getItem('language') || 'ru';
         
-        // ПОЛНЫЙ словарь переводов для всех элементов на странице
         this.translations = {
             ru: {
-                // Navigation
                 nav_home: 'Главная',
                 nav_about: 'Обо мне',
                 nav_skills: 'Навыки',
                 nav_experience: 'Опыт',
                 nav_projects: 'Проекты',
                 nav_contact: 'Контакты',
-                
-                // Hero
                 available: '🔥 Доступен для работы',
                 hello: 'Привет, я',
                 description: 'Стремлюсь к постоянному развитию в сфере обеспечения качества и тестирования. Увлечен автоматизацией и поиском новых подходов к улучшению процессов.',
@@ -231,8 +333,6 @@ class LanguageManager {
                 bug_hunter: 'Bug Hunter',
                 auto_qa: 'Auto QA',
                 quality: 'Quality',
-                
-                // About
                 about_highlight: 'QA-инженер, стремящийся к совершенству в обеспечении качества',
                 about_text: 'За 2 года работы в IT участвовал в тестировании различных проектов. Постоянно учусь новому, слежу за трендами в тестировании и применяю современные подходы в работе.',
                 projects_count: 'Проектов',
@@ -247,20 +347,14 @@ class LanguageManager {
                 interest_3: 'Оптимизация процессов',
                 interest_4: 'Поиск нестандартных решений',
                 interest_5: 'Постоянное саморазвитие',
-                
-                // Skills
                 what_i_can: 'Что я умею',
                 skills: 'Навыки',
                 all: 'Все',
                 automation: 'Автоматизация',
                 manual: 'Ручное тестирование',
                 tools: 'Инструменты',
-                
-                // Experience
                 career_path: 'Карьерный путь',
                 experience: 'Опыт работы',
-                
-                // ВТБ
                 vtb_1: 'Проектирование и планирование тестирования',
                 vtb_2: 'Выполнение комплексного тестирования (функциональное, регрессионное, smoke и т.д.)',
                 vtb_3: 'Управление дефектами и отслеживание качества',
@@ -268,44 +362,31 @@ class LanguageManager {
                 vtb_5: 'Отчётность и анализ результатов тестирования',
                 vtb_6: 'Интеграция в процессы разработки',
                 vtb_7: 'Демонстрация функционала заказчику (ПСИ)',
-                
-                // Неофлекс
                 neoflex_1: 'Проектирование и планирование тестирования',
                 neoflex_2: 'Выполнение комплексного тестирования',
                 neoflex_3: 'Управление дефектами и отслеживание качества',
                 neoflex_4: 'Работа с тестовыми данными',
                 neoflex_5: 'Отчётность и анализ результатов',
-                
-                // Projects
                 my_projects: 'Мои работы',
                 projects_title: 'Проекты',
                 project_title: 'Автоматизированное тестирование Tutu.ru',
                 project_desc: 'Разработка фреймворка для автоматизации тестирования веб-приложения Tutu.ru. Включает UI и API тесты с генерацией отчетов.',
                 open_github: 'Открыть на GitHub →',
-                
-                // CTA
                 cta_title: 'Открыт к предложениям!',
                 cta_text: 'Готов применять свои навыки и развиваться в новой команде',
                 cta_button: 'Написать мне',
-                
-                // Contact
                 get_in_touch: 'Свяжитесь со мной',
                 contacts: 'Контакты',
-                
-                // Footer
                 qa_engineer: 'QA Инженер',
                 made_with: 'Сделано с ❤️ в Новосибирске'
             },
             en: {
-                // Navigation
                 nav_home: 'Home',
                 nav_about: 'About',
                 nav_skills: 'Skills',
                 nav_experience: 'Experience',
                 nav_projects: 'Projects',
                 nav_contact: 'Contact',
-                
-                // Hero
                 available: '🔥 Available for work',
                 hello: "Hi, I'm",
                 description: 'I strive for continuous development in the field of quality assurance and testing. Passionate about automation and finding new approaches to improve processes.',
@@ -316,8 +397,6 @@ class LanguageManager {
                 bug_hunter: 'Bug Hunter',
                 auto_qa: 'Auto QA',
                 quality: 'Quality',
-                
-                // About
                 about_highlight: 'QA Engineer striving for excellence in quality assurance',
                 about_text: 'For 2 years in IT, I have participated in testing various projects. I constantly learn new things, follow testing trends and apply modern approaches in my work.',
                 projects_count: 'Projects',
@@ -332,20 +411,14 @@ class LanguageManager {
                 interest_3: 'Process optimization',
                 interest_4: 'Finding non-standard solutions',
                 interest_5: 'Continuous self-development',
-                
-                // Skills
                 what_i_can: 'What I do',
                 skills: 'Skills',
                 all: 'All',
                 automation: 'Automation',
                 manual: 'Manual Testing',
                 tools: 'Tools',
-                
-                // Experience
                 career_path: 'Career path',
                 experience: 'Experience',
-                
-                // ВТБ
                 vtb_1: 'Test design and planning',
                 vtb_2: 'Comprehensive testing (functional, regression, smoke, etc.)',
                 vtb_3: 'Defect management and quality tracking',
@@ -353,31 +426,21 @@ class LanguageManager {
                 vtb_5: 'Reporting and test results analysis',
                 vtb_6: 'Integration into development processes',
                 vtb_7: 'Functionality demonstration to the customer (UAT)',
-                
-                // Неофлекс
                 neoflex_1: 'Test design and planning',
                 neoflex_2: 'Comprehensive testing',
                 neoflex_3: 'Defect management and quality tracking',
                 neoflex_4: 'Working with test data',
                 neoflex_5: 'Reporting and analysis of results',
-                
-                // Projects
                 my_projects: 'My work',
                 projects_title: 'Projects',
                 project_title: 'Automated testing of Tutu.ru',
                 project_desc: 'Development of a framework for automating testing of the Tutu.ru web application. Includes UI and API tests with report generation.',
                 open_github: 'Open on GitHub →',
-                
-                // CTA
                 cta_title: "I'm open to offers!",
                 cta_text: 'Ready to apply my skills and develop in a new team',
                 cta_button: 'Write to me',
-                
-                // Contact
                 get_in_touch: 'Get in touch',
                 contacts: 'Contacts',
-                
-                // Footer
                 qa_engineer: 'QA Engineer',
                 made_with: 'Made with ❤️ in Novosibirsk'
             }
@@ -397,58 +460,31 @@ class LanguageManager {
         this.currentLang = lang;
         localStorage.setItem('language', lang);
         
-        // Update toggle buttons
         this.langRu.classList.toggle('active', lang === 'ru');
         this.langEn.classList.toggle('active', lang === 'en');
         
-        // Update ALL elements with data-i18n attribute
         document.querySelectorAll('[data-i18n]').forEach(element => {
             const key = element.getAttribute('data-i18n');
             if (this.translations[lang][key]) {
-                // Проверяем, есть ли внутри элемента дочерние элементы (например, иконки)
                 if (element.children.length > 0) {
-                    // Ищем текстовый узел или элемент span внутри
-                    let textElement = null;
-                    
-                    // Сначала ищем span внутри (для элементов с иконками)
                     const span = element.querySelector('span');
                     if (span) {
-                        textElement = span;
-                    } else {
-                        // Если нет span, ищем первый текстовый узел
-                        for (let node of element.childNodes) {
-                            if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== '') {
-                                textElement = node;
-                                break;
-                            }
-                        }
-                    }
-                    
-                    if (textElement) {
-                        textElement.textContent = this.translations[lang][key];
+                        span.textContent = this.translations[lang][key];
                     }
                 } else {
-                    // Простой элемент без вложенных тегов
                     element.textContent = this.translations[lang][key];
                 }
             }
         });
 
-        // Специальная обработка для заголовка секции проектов
         const projectsTitle = document.querySelector('#projects .section-title');
         if (projectsTitle && this.translations[lang].projects_title) {
             projectsTitle.textContent = this.translations[lang].projects_title;
         }
-        
-        // Обновляем текст в hero-секции (специальная обработка для gradient-text)
-        const heroTitle = document.querySelector('.hero-title .gradient-text');
-        if (heroTitle && lang === 'en') {
-            // Имя не переводится, оставляем как есть
-        }
     }
 }
 
-// ===== Skills Manager =====
+// ===== Skills Manager с анимацией =====
 class SkillsManager {
     constructor() {
         this.skillsGrid = document.getElementById('skillsGrid');
@@ -480,29 +516,46 @@ class SkillsManager {
     }
 
     renderSkills(category) {
-        const filteredSkills = category === 'all' 
-            ? this.skills 
-            : this.skills.filter(skill => skill.category === category);
+        // Анимация исчезновения
+        this.skillsGrid.style.opacity = '0';
+        this.skillsGrid.style.transform = 'scale(0.95)';
         
-        this.skillsGrid.innerHTML = filteredSkills.map(skill => `
-            <div class="skill-card" data-category="${skill.category}">
-                <i class="${skill.icon} skill-icon"></i>
-                <h3 class="skill-name">${skill.name}</h3>
-                <div class="skill-level">
-                    <div class="skill-progress" style="width: ${skill.level}%"></div>
+        setTimeout(() => {
+            const filteredSkills = category === 'all' 
+                ? this.skills 
+                : this.skills.filter(skill => skill.category === category);
+            
+            this.skillsGrid.innerHTML = filteredSkills.map((skill, index) => `
+                <div class="skill-card" data-category="${skill.category}" style="animation-delay: ${index * 0.05}s">
+                    <i class="${skill.icon} skill-icon"></i>
+                    <h3 class="skill-name">${skill.name}</h3>
+                    <div class="skill-level">
+                        <div class="skill-progress" style="width: ${skill.level}%"></div>
+                    </div>
                 </div>
-            </div>
-        `).join('');
+            `).join('');
+            
+            // Анимация появления
+            setTimeout(() => {
+                this.skillsGrid.style.opacity = '1';
+                this.skillsGrid.style.transform = 'scale(1)';
+                
+                // Запускаем анимацию для новых карточек
+                document.querySelectorAll('.skill-card').forEach(card => {
+                    card.style.animation = 'none';
+                    card.offsetHeight; // Trigger reflow
+                    card.style.animation = 'fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+                });
+            }, 50);
+        }, 300);
     }
 
     addFilterListeners() {
         this.filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                // Update active button
                 this.filterBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 
-                // Filter skills
                 const category = btn.getAttribute('data-filter');
                 this.renderSkills(category);
             });
@@ -513,7 +566,6 @@ class SkillsManager {
 // ===== Copy to Clipboard =====
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
-        // Show temporary notification
         const notification = document.createElement('div');
         notification.textContent = 'Email скопирован! / Email copied!';
         notification.style.cssText = `
@@ -535,13 +587,8 @@ function copyToClipboard(text) {
         setTimeout(() => {
             notification.style.opacity = '0';
             notification.style.transition = 'opacity 0.3s ease';
-            setTimeout(() => {
-                notification.remove();
-            }, 300);
+            setTimeout(() => notification.remove(), 300);
         }, 2000);
-    }).catch(err => {
-        console.error('Failed to copy: ', err);
-        alert('Не удалось скопировать / Failed to copy');
     });
 }
 
@@ -562,7 +609,6 @@ class MobileNav {
             this.hamburger.classList.toggle('active');
             this.navLinks.classList.toggle('active');
             
-            // Transform hamburger to X
             const spans = this.hamburger.querySelectorAll('span');
             if (this.hamburger.classList.contains('active')) {
                 spans[0].style.transform = 'rotate(45deg) translate(8px, 8px)';
@@ -575,147 +621,37 @@ class MobileNav {
             }
         });
 
-        // Close menu when clicking a link
         this.navLinksItems.forEach(link => {
             link.addEventListener('click', () => {
                 this.hamburger.classList.remove('active');
                 this.navLinks.classList.remove('active');
                 
-                // Reset hamburger
                 const spans = this.hamburger.querySelectorAll('span');
                 spans[0].style.transform = 'none';
                 spans[1].style.opacity = '1';
                 spans[2].style.transform = 'none';
             });
         });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!this.hamburger.contains(e.target) && !this.navLinks.contains(e.target)) {
-                this.hamburger.classList.remove('active');
-                this.navLinks.classList.remove('active');
-                
-                // Reset hamburger
-                const spans = this.hamburger.querySelectorAll('span');
-                spans[0].style.transform = 'none';
-                spans[1].style.opacity = '1';
-                spans[2].style.transform = 'none';
-            }
-        });
-    }
-}
-
-// ===== Scroll Animations =====
-class ScrollAnimations {
-    constructor() {
-        this.sections = document.querySelectorAll('section');
-        this.navLinks = document.querySelectorAll('.nav-link');
-        
-        this.init();
-    }
-
-    init() {
-        window.addEventListener('scroll', () => {
-            this.updateActiveNav();
-            this.animateOnScroll();
-        });
-        
-        // Initial check
-        this.updateActiveNav();
-        this.animateOnScroll();
-    }
-
-    updateActiveNav() {
-        let current = '';
-        const scrollPosition = window.scrollY + 100; // Offset for better UX
-
-        this.sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionBottom = sectionTop + section.offsetHeight;
-
-            if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        this.navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${current}`) {
-                link.classList.add('active');
-            }
-        });
-    }
-
-    animateOnScroll() {
-        const elements = document.querySelectorAll('.skill-card, .project-card, .info-card, .timeline-item');
-        
-        elements.forEach(element => {
-            const elementTop = element.getBoundingClientRect().top;
-            const elementBottom = element.getBoundingClientRect().bottom;
-            
-            if (elementTop < window.innerHeight - 50 && elementBottom > 0) {
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0)';
-            }
-        });
     }
 }
 
 // ===== Initialize Everything =====
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize particles
-    const particles = new ParticlesNetwork('particles-canvas');
+    new ParticlesNetwork('particles-canvas');
+    new TypedText('.typed-text', ['Engineer', 'Automation', 'Manual', 'Specialist']);
+    new ThemeManager();
+    new LanguageManager();
+    new SkillsManager();
+    new MobileNav();
     
-    // Initialize typed text
-    const typed = new TypedText('.typed-text', ['Engineer', 'Automation', 'Manual', 'Specialist']);
-    
-    // Initialize theme manager (с плавной анимацией)
-    const theme = new ThemeManager();
-    
-    // Initialize language manager (ПОЛНОСТЬЮ РАБОЧИЙ)
-    const language = new LanguageManager();
-    
-    // Initialize skills manager
-    const skills = new SkillsManager();
-    
-    // Initialize mobile navigation
-    const mobileNav = new MobileNav();
-    
-    // Initialize scroll animations
-    const scrollAnimations = new ScrollAnimations();
-    
-    // Add smooth scrolling to all links
+    // Smooth scrolling
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
     });
-    
-    // Add animation on page load
-    setTimeout(() => {
-        document.body.style.opacity = '1';
-    }, 100);
 });
-
-// Add slideUp animation keyframes
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideUp {
-        from {
-            transform: translate(-50%, 20px);
-            opacity: 0;
-        }
-        to {
-            transform: translate(-50%, 0);
-            opacity: 1;
-        }
-    }
-`;
-document.head.appendChild(style);
