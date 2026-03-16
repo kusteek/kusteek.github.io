@@ -131,10 +131,7 @@
                                 <span class="highlight-number">200+</span>
                                 <span class="highlight-label" data-key="about_highlight_bugs">Найденных багов</span>
                             </div>
-                            <div class="highlight-item">
-                                <span class="highlight-number">100%</span>
-                                <span class="highlight-label" data-key="about_highlight_resp">Ответственность</span>
-                            </div>
+                            <!-- Удален блок с ответственностью -->
                         </div>
                     </div>
                 </div>
@@ -162,11 +159,11 @@
                         </div>
                         <h3 data-key="about_card_interests_title">Интересы</h3>
                         <div class="interests-list">
-                            <span data-key="interest_1">📚 Изучение новых технологий</span>
-                            <span data-key="interest_2">🤖 Автоматизация всего</span>
-                            <span data-key="interest_3">📈 Оптимизация процессов</span>
-                            <span data-key="interest_4">💡 Поиск нестандартных решений</span>
-                            <span data-key="interest_5">🎯 Постоянное саморазвитие</span>
+                            <span><i class="fas fa-rocket interest-icon"></i> <span data-key="interest_1">Изучение новых технологий</span></span>
+                            <span><i class="fas fa-robot interest-icon"></i> <span data-key="interest_2">Автоматизация всего</span></span>
+                            <span><i class="fas fa-chart-line interest-icon"></i> <span data-key="interest_3">Оптимизация процессов</span></span>
+                            <span><i class="fas fa-lightbulb interest-icon"></i> <span data-key="interest_4">Поиск нестандартных решений</span></span>
+                            <span><i class="fas fa-seedling interest-icon"></i> <span data-key="interest_5">Постоянное саморазвитие</span></span>
                         </div>
                         <div class="card-decoration"></div>
                     </div>
@@ -188,10 +185,10 @@
                 <button class="filter-btn" data-filter="tools" data-key="filter_tools">Инструменты</button>
             </div>
 
-            <div class="skills-grid" id="skillsGrid"></div> <!-- Заполняется из script.js -->
+            <div class="skills-grid" id="skillsGrid"></div>
         </section>
 
-        <!-- Опыт работы (ВОЗВРАЩЁН) -->
+        <!-- Опыт работы -->
         <section id="experience" class="experience">
             <div class="section-header">
                 <span class="section-subtitle" data-key="exp_subtitle">Карьерный путь</span>
@@ -258,7 +255,7 @@
             </div>
         </section>
 
-        <!-- Проекты (ВОЗВРАЩЁН) -->
+        <!-- Проекты -->
         <section id="projects" class="projects">
             <div class="section-header">
                 <span class="section-subtitle" data-key="projects_subtitle">Мои работы</span>
@@ -308,7 +305,7 @@
             </div>
         </section>
 
-        <!-- Контакты (ВОЗВРАЩЁН) -->
+        <!-- Контакты -->
         <section id="contact" class="contact">
             <div class="section-header">
                 <span class="section-subtitle" data-key="contact_subtitle">Свяжитесь со мной</span>
@@ -371,201 +368,5 @@
     </footer>
 
     <script src="script.js"></script>
-    <!-- Добавляем скрипт перевода -->
-    <script>
-        (function() {
-            // --- Объект с переводами ---
-            const translations = {
-                ru: {
-                    nav_home: 'Главная',
-                    nav_about: 'Обо мне',
-                    nav_skills: 'Навыки',
-                    nav_experience: 'Опыт',
-                    nav_projects: 'Проекты',
-                    nav_contact: 'Контакты',
-                    hero_badge: '🔥 Доступен для работы',
-                    hero_hi: 'Привет, я',
-                    hero_desc: 'Стремлюсь к постоянному развитию в сфере обеспечения качества и тестирования. Увлечен автоматизацией и поиском новых подходов к улучшению процессов.',
-                    hero_btn: 'Связаться со мной',
-                    stat_exp: 'Года опыта',
-                    stat_bugs: '+ багов',
-                    stat_proj: 'проектов',
-                    about_subtitle: 'Кто я',
-                    about_title: 'Обо мне',
-                    about_quote: 'QA-инженер, стремящийся к совершенству в обеспечении качества',
-                    about_desc: 'За 2 года работы в IT участвовал в тестировании различных проектов. Постоянно учусь новому, слежу за трендами в тестировании и применяю современные подходы в работе.',
-                    about_highlight_proj: 'Проектов',
-                    about_highlight_bugs: 'Найденных багов',
-                    about_highlight_resp: 'Ответственность',
-                    about_card_loc_title: 'Локация',
-                    about_card_loc_value: 'Новосибирск, Россия',
-                    about_card_lang_title: 'Языки',
-                    about_card_lang_ru: 'Русский',
-                    about_card_interests_title: 'Интересы',
-                    interest_1: '📚 Изучение новых технологий',
-                    interest_2: '🤖 Автоматизация всего',
-                    interest_3: '📈 Оптимизация процессов',
-                    interest_4: '💡 Поиск нестандартных решений',
-                    interest_5: '🎯 Постоянное саморазвитие',
-                    skills_subtitle: 'Что я умею',
-                    skills_title: 'Навыки',
-                    filter_all: 'Все',
-                    filter_auto: 'Автоматизация',
-                    filter_manual: 'Ручное тестирование',
-                    filter_tools: 'Инструменты',
-                    exp_subtitle: 'Карьерный путь',
-                    exp_title: 'Опыт работы',
-                    exp_vtb_fulltime: 'Полный день',
-                    exp_vtb_1: 'Проектирование и планирование тестирования',
-                    exp_vtb_2: 'Выполнение комплексного тестирования (функциональное, регрессионное, smoke и т.д.)',
-                    exp_vtb_3: 'Управление дефектами и отслеживание качества',
-                    exp_vtb_4: 'Работа с тестовыми данными и тестовым окружением',
-                    exp_vtb_5: 'Отчётность и анализ результатов тестирования',
-                    exp_vtb_6: 'Интеграция в процессы разработки',
-                    exp_vtb_7: 'Демонстрация функционала заказчику (ПСИ)',
-                    exp_neoflex_duration: '4 месяца',
-                    exp_neoflex_1: 'Проектирование и планирование тестирования',
-                    exp_neoflex_2: 'Выполнение комплексного тестирования',
-                    exp_neoflex_3: 'Управление дефектами и отслеживание качества',
-                    exp_neoflex_4: 'Работа с тестовыми данными',
-                    exp_neoflex_5: 'Отчётность и анализ результатов',
-                    projects_subtitle: 'Мои работы',
-                    projects_title: 'Проекты',
-                    project_tutu_title: 'Автоматизированное тестирование Tutu.ru',
-                    project_tutu_desc: 'Разработка фреймворка для автоматизации тестирования веб-приложения Tutu.ru. Включает UI и API тесты с генерацией отчетов.',
-                    project_tutu_hover: 'Открыть на GitHub →',
-                    cta_title: 'Открыт к предложениям!',
-                    cta_desc: 'Готов применять свои навыки и развиваться в новой команде',
-                    cta_btn: 'Написать мне',
-                    contact_subtitle: 'Свяжитесь со мной',
-                    contact_title: 'Контакты',
-                    contact_online: '● online',
-                    contact_github_stats: '⭐ 5 репозиториев',
-                    contact_loc_title: 'Локация',
-                    contact_loc_value: 'Новосибирск',
-                    footer_title: 'QA Инженер',
-                    footer_made: 'Сделано с ❤️ в Новосибирске'
-                },
-                en: {
-                    nav_home: 'Home',
-                    nav_about: 'About',
-                    nav_skills: 'Skills',
-                    nav_experience: 'Experience',
-                    nav_projects: 'Projects',
-                    nav_contact: 'Contact',
-                    hero_badge: '🔥 Open for work',
-                    hero_hi: "Hi, I'm",
-                    hero_desc: 'I strive for continuous development in the field of quality assurance and testing. Passionate about automation and finding new approaches to improve processes.',
-                    hero_btn: 'Contact me',
-                    stat_exp: 'Years exp.',
-                    stat_bugs: '+ bugs',
-                    stat_proj: 'projects',
-                    about_subtitle: 'Who I am',
-                    about_title: 'About me',
-                    about_quote: 'QA engineer striving for excellence in quality assurance',
-                    about_desc: 'For 2 years in IT, I have participated in testing various projects. I constantly learn new things, follow trends in testing and apply modern approaches in my work.',
-                    about_highlight_proj: 'Projects',
-                    about_highlight_bugs: 'Bugs found',
-                    about_highlight_resp: 'Responsibility',
-                    about_card_loc_title: 'Location',
-                    about_card_loc_value: 'Novosibirsk, Russia',
-                    about_card_lang_title: 'Languages',
-                    about_card_lang_ru: 'Russian',
-                    about_card_interests_title: 'Interests',
-                    interest_1: '📚 Learning new tech',
-                    interest_2: '🤖 Automating everything',
-                    interest_3: '📈 Process optimization',
-                    interest_4: '💡 Finding solutions',
-                    interest_5: '🎯 Constant self-growth',
-                    skills_subtitle: 'What I do',
-                    skills_title: 'Skills',
-                    filter_all: 'All',
-                    filter_auto: 'Automation',
-                    filter_manual: 'Manual',
-                    filter_tools: 'Tools',
-                    exp_subtitle: 'Career path',
-                    exp_title: 'Work experience',
-                    exp_vtb_fulltime: 'Full-time',
-                    exp_vtb_1: 'Test design and planning',
-                    exp_vtb_2: 'Comprehensive testing (functional, regression, smoke, etc.)',
-                    exp_vtb_3: 'Defect management and quality tracking',
-                    exp_vtb_4: 'Working with test data and test environment',
-                    exp_vtb_5: 'Reporting and analysis of test results',
-                    exp_vtb_6: 'Integration into development processes',
-                    exp_vtb_7: 'Demonstration of functionality to the customer (UAT)',
-                    exp_neoflex_duration: '4 months',
-                    exp_neoflex_1: 'Test design and planning',
-                    exp_neoflex_2: 'Comprehensive testing',
-                    exp_neoflex_3: 'Defect management and quality tracking',
-                    exp_neoflex_4: 'Working with test data',
-                    exp_neoflex_5: 'Reporting and analysis',
-                    projects_subtitle: 'My work',
-                    projects_title: 'Projects',
-                    project_tutu_title: 'Automated testing of Tutu.ru',
-                    project_tutu_desc: 'Development of a framework for automated testing of the Tutu.ru web application. Includes UI and API tests with report generation.',
-                    project_tutu_hover: 'Open on GitHub →',
-                    cta_title: "I'm open to offers!",
-                    cta_desc: 'Ready to apply my skills and grow in a new team',
-                    cta_btn: 'Write me',
-                    contact_subtitle: 'Contact me',
-                    contact_title: 'Contacts',
-                    contact_online: '● online',
-                    contact_github_stats: '⭐ 5 repositories',
-                    contact_loc_title: 'Location',
-                    contact_loc_value: 'Novosibirsk',
-                    footer_title: 'QA Engineer',
-                    footer_made: 'Made with ❤️ in Novosibirsk'
-                }
-            };
-
-            let currentLang = 'ru';
-
-            function translatePage(lang) {
-                const elements = document.querySelectorAll('[data-key]');
-                elements.forEach(el => {
-                    const key = el.getAttribute('data-key');
-                    if (translations[lang] && translations[lang][key]) {
-                        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                            el.placeholder = translations[lang][key];
-                        } else {
-                            el.innerHTML = translations[lang][key];
-                        }
-                    }
-                });
-
-                // Обновить активное состояние кнопок языка
-                document.querySelector('.lang-ru')?.classList.toggle('active', lang === 'ru');
-                document.querySelector('.lang-en')?.classList.toggle('active', lang === 'en');
-
-                localStorage.setItem('preferredLanguage', lang);
-                currentLang = lang;
-
-                // Если навыки уже загружены динамически, нужно будет их тоже перевести.
-                // Для этого можно вызвать отдельную функцию, которая обновит текст в skillsGrid.
-                // Но это потребует доработки script.js. Если навыки добавляются через JS,
-                // и у них есть data-key, то они тоже будут переведены этим циклом.
-                // Если нет - нужно добавить data-key в код генерации навыков.
-                // Рекомендую в файле script.js при создании карточек навыков добавлять атрибут data-key
-                // с уникальным ключом для каждого навыка и включить их перевод в объект translations.
-            }
-
-            // Обработчик клика по переключателю языка
-            document.addEventListener('DOMContentLoaded', function() {
-                const langToggle = document.getElementById('languageToggle');
-                if (langToggle) {
-                    langToggle.addEventListener('click', function() {
-                        const isRu = document.querySelector('.lang-ru').classList.contains('active');
-                        translatePage(isRu ? 'en' : 'ru');
-                    });
-                }
-
-                // Восстанавливаем сохранённый язык
-                const savedLang = localStorage.getItem('preferredLanguage');
-                if (savedLang && (savedLang === 'en' || savedLang === 'ru')) {
-                    translatePage(savedLang);
-                }
-            });
-        })();
-    </script>
 </body>
 </html>
