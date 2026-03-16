@@ -34,7 +34,6 @@ const translations = {
         bug_hunter: 'Bug Hunter',
         auto_qa: 'Auto QA',
         quality: 'Quality',
-        who_i_am: 'Кто я',
         about_me: 'Обо мне',
         about_highlight: 'QA-инженер, стремящийся к совершенству в обеспечении качества',
         about_text: 'За 2 года работы в IT участвовал в тестировании различных проектов. Постоянно учусь новому, слежу за трендами в тестировании и применяю современные подходы в работе.',
@@ -50,13 +49,11 @@ const translations = {
         interest_3: 'Оптимизация процессов',
         interest_4: 'Поиск нестандартных решений',
         interest_5: 'Постоянное саморазвитие',
-        what_i_can: 'Что я умею',
         skills: 'Навыки',
         all: 'Все',
         automation: 'Автоматизация',
         manual: 'Ручное тестирование',
         tools: 'Инструменты',
-        career_path: 'Карьерный путь',
         experience: 'Опыт работы',
         vtb_1: 'Проектирование и планирование тестирования',
         vtb_2: 'Выполнение комплексного тестирования (функциональное, регрессионное, smoke и т.д.)',
@@ -70,14 +67,13 @@ const translations = {
         neoflex_3: 'Управление дефектами и отслеживание качества',
         neoflex_4: 'Работа с тестовыми данными',
         neoflex_5: 'Отчётность и анализ результатов',
-        my_projects: 'Мои работы',
+        my_projects: 'Мои проекты',
         project_title: 'Автоматизированное тестирование Tutu.ru',
         project_desc: 'Разработка фреймворка для автоматизации тестирования веб-приложения Tutu.ru. Включает UI и API тесты с генерацией отчетов.',
         open_github: 'Открыть на GitHub →',
         cta_title: 'Открыт к предложениям!',
         cta_text: 'Готов применять свои навыки и развиваться в новой команде',
         cta_button: 'Написать мне',
-        get_in_touch: 'Свяжитесь со мной',
         contacts: 'Контакты',
         qa_engineer: 'QA Инженер',
         made_with: 'Сделано с ❤️ в Новосибирске'
@@ -99,7 +95,6 @@ const translations = {
         bug_hunter: 'Bug Hunter',
         auto_qa: 'Auto QA',
         quality: 'Quality',
-        who_i_am: 'Who I am',
         about_me: 'About me',
         about_highlight: 'QA Engineer striving for excellence in quality assurance',
         about_text: 'In 2 years in IT, I participated in testing various projects. Constantly learning new things, following trends in testing and applying modern approaches in work.',
@@ -115,13 +110,11 @@ const translations = {
         interest_3: 'Process optimization',
         interest_4: 'Finding non-standard solutions',
         interest_5: 'Continuous self-development',
-        what_i_can: 'What I can do',
         skills: 'Skills',
         all: 'All',
         automation: 'Automation',
         manual: 'Manual Testing',
         tools: 'Tools',
-        career_path: 'Career path',
         experience: 'Experience',
         vtb_1: 'Test design and planning',
         vtb_2: 'Comprehensive testing (functional, regression, smoke, etc.)',
@@ -142,7 +135,6 @@ const translations = {
         cta_title: 'Open to offers!',
         cta_text: 'Ready to apply my skills and grow in a new team',
         cta_button: 'Write to me',
-        get_in_touch: 'Get in touch',
         contacts: 'Contacts',
         qa_engineer: 'QA Engineer',
         made_with: 'Made with ❤️ in Novosibirsk'
@@ -153,6 +145,10 @@ let currentLanguage = 'ru';
 let mouseX = 0;
 let mouseY = 0;
 let typedInterval;
+let particles = [];
+let particleCanvas;
+let particleCtx;
+let animationFrame;
 
 // Инициализация
 document.addEventListener('DOMContentLoaded', function() {
@@ -241,13 +237,12 @@ function setLanguage(lang) {
     localStorage.setItem('language', lang);
 }
 
-// Частицы
+// Частицы с улучшенным взаимодействием
 function initializeParticles() {
-    const canvas = document.getElementById('particles-canvas');
-    if (!canvas) return;
+    particleCanvas = document.getElementById('particles-canvas');
+    if (!particleCanvas) return;
     
-    const ctx = canvas.getContext('2d');
-    let particles = [];
+    particleCtx = particleCanvas.getContext('2d');
     
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
@@ -255,57 +250,95 @@ function initializeParticles() {
     });
     
     function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        particleCanvas.width = window.innerWidth;
+        particleCanvas.height = window.innerHeight;
     }
     
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
     
-    for (let i = 0; i < 60; i++) {
+    // Создаем частицы
+    for (let i = 0; i < 80; i++) {
         particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 2 + 1,
-            speedX: Math.random() * 0.3 - 0.15,
-            speedY: Math.random() * 0.3 - 0.15,
-            color: `rgba(108, 92, 231, ${Math.random() * 0.3 + 0.1})`
+            x: Math.random() * particleCanvas.width,
+            y: Math.random() * particleCanvas.height,
+            size: Math.random() * 3 + 1,
+            speedX: (Math.random() - 0.5) * 0.5,
+            speedY: (Math.random() - 0.5) * 0.5,
+            color: `rgba(108, 92, 231, ${Math.random() * 0.4 + 0.2})`,
+            baseColor: `rgba(108, 92, 231, ${Math.random() * 0.4 + 0.2})`,
+            angle: Math.random() * Math.PI * 2
         });
     }
     
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    animateParticles();
+}
+
+function animateParticles() {
+    if (!particleCtx || !particleCanvas) return;
+    
+    particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+    
+    particles.forEach(p => {
+        // Движение
+        p.x += p.speedX;
+        p.y += p.speedY;
         
-        particles.forEach(p => {
-            p.x += p.speedX;
-            p.y += p.speedY;
-            
-            const dx = mouseX - p.x;
-            const dy = mouseY - p.y;
+        // Взаимодействие с мышью
+        const dx = mouseX - p.x;
+        const dy = mouseY - p.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < 150) {
+            const angle = Math.atan2(dy, dx);
+            const force = (150 - distance) / 150;
+            p.x -= Math.cos(angle) * force * 2;
+            p.y -= Math.sin(angle) * force * 2;
+            p.color = `rgba(255, 100, 255, ${force * 0.8})`;
+            p.size = Math.min(p.size + 0.1, 5);
+        } else {
+            p.color = p.baseColor;
+            p.size = Math.max(p.size - 0.05, 1);
+        }
+        
+        // Границы
+        if (p.x < 0) p.x = particleCanvas.width;
+        if (p.x > particleCanvas.width) p.x = 0;
+        if (p.y < 0) p.y = particleCanvas.height;
+        if (p.y > particleCanvas.height) p.y = 0;
+        
+        // Рисуем частицу
+        particleCtx.beginPath();
+        particleCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        particleCtx.fillStyle = p.color;
+        particleCtx.fill();
+        
+        // Добавляем свечение
+        particleCtx.shadowColor = p.color;
+        particleCtx.shadowBlur = 10;
+        particleCtx.fill();
+        particleCtx.shadowBlur = 0;
+    });
+    
+    // Рисуем связи между близкими частицами
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             
-            if (distance < 100) {
-                const angle = Math.atan2(dy, dx);
-                const force = (100 - distance) / 100;
-                p.x -= Math.cos(angle) * force * 1.5;
-                p.y -= Math.sin(angle) * force * 1.5;
+            if (distance < 120) {
+                particleCtx.beginPath();
+                particleCtx.moveTo(particles[i].x, particles[i].y);
+                particleCtx.lineTo(particles[j].x, particles[j].y);
+                particleCtx.strokeStyle = `rgba(108, 92, 231, ${0.2 * (1 - distance/120)})`;
+                particleCtx.lineWidth = 1;
+                particleCtx.stroke();
             }
-            
-            if (p.x > canvas.width) p.x = 0;
-            if (p.x < 0) p.x = canvas.width;
-            if (p.y > canvas.height) p.y = 0;
-            if (p.y < 0) p.y = canvas.height;
-            
-            ctx.fillStyle = p.color;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
-        });
-        
-        requestAnimationFrame(animate);
+        }
     }
     
-    animate();
+    animationFrame = requestAnimationFrame(animateParticles);
 }
 
 // Печатающийся текст
@@ -350,7 +383,7 @@ function initializeTypedText() {
     type();
 }
 
-// Навыки
+// Навыки с плавной анимацией
 function initializeSkills() {
     const skillsGrid = document.getElementById('skillsGrid');
     if (!skillsGrid) return;
@@ -358,20 +391,40 @@ function initializeSkills() {
     function renderSkills(category = 'all') {
         const filtered = category === 'all' ? skillsData : skillsData.filter(s => s.category === category);
         
-        skillsGrid.innerHTML = filtered.map(skill => {
-            const name = skill.name[currentLanguage] || skill.name.ru;
-            return `
-                <div class="skill-item">
-                    <div class="skill-name">
-                        <i class="${skill.icon}"></i>
-                        <span>${name}</span>
+        // Добавляем класс для анимации исчезновения
+        skillsGrid.classList.add('replacing');
+        
+        setTimeout(() => {
+            skillsGrid.innerHTML = filtered.map(skill => {
+                const name = skill.name[currentLanguage] || skill.name.ru;
+                return `
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <i class="${skill.icon}"></i>
+                            <span>${name}</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: ${skill.level}%"></div>
+                        </div>
                     </div>
-                    <div class="skill-bar">
-                        <div class="skill-progress" style="width: ${skill.level}%"></div>
-                    </div>
-                </div>
-            `;
-        }).join('');
+                `;
+            }).join('');
+            
+            // Убираем класс анимации и показываем новые навыки
+            skillsGrid.classList.remove('replacing');
+            
+            // Анимируем прогресс-бары
+            setTimeout(() => {
+                document.querySelectorAll('.skill-item').forEach((item, index) => {
+                    const progress = item.querySelector('.skill-progress');
+                    const level = filtered[index].level;
+                    progress.style.width = '0%';
+                    setTimeout(() => {
+                        progress.style.width = level + '%';
+                    }, 50);
+                });
+            }, 100);
+        }, 300);
     }
 
     renderSkills();
@@ -518,4 +571,10 @@ function showNotification(message) {
         notification.style.animation = 'slideOut 0.3s ease';
         setTimeout(() => notification.remove(), 300);
     }, 2000);
+}
+
+// Функция для кнопок копирования
+function initializeCopyButtons() {
+    // Кнопки уже работают через onclick в HTML
+    console.log('Copy buttons initialized');
 }
