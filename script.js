@@ -26,7 +26,6 @@ const translations = {
         nav_contact: 'Контакты',
         available: '🔥 Доступен для работы',
         hello: 'Привет, я',
-        typed_placeholder: '',
         description: 'Стремлюсь к постоянному развитию в сфере обеспечения качества и тестирования. Увлечен автоматизацией и поиском новых подходов к улучшению процессов.',
         contact_me: 'Связаться со мной',
         years: 'Года опыта',
@@ -92,7 +91,6 @@ const translations = {
         nav_contact: 'Contact',
         available: '🔥 Available for work',
         hello: "Hi, I'm",
-        typed_placeholder: '',
         description: 'I strive for continuous development in quality assurance and testing. Passionate about automation and finding new approaches to improve processes.',
         contact_me: 'Contact me',
         years: 'years exp',
@@ -186,21 +184,16 @@ document.addEventListener('DOMContentLoaded', function() {
 function applyTranslations() {
     document.querySelectorAll('[data-i18n]').forEach(element => {
         const key = element.getAttribute('data-i18n');
-        if (translations[currentLanguage][key]) {
+        if (translations[currentLanguage] && translations[currentLanguage][key]) {
             if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
                 element.placeholder = translations[currentLanguage][key];
+            } else if (element.tagName === 'BUTTON') {
+                element.innerHTML = translations[currentLanguage][key];
             } else {
                 element.textContent = translations[currentLanguage][key];
             }
         }
     });
-    
-    // Обновляем typed text слова
-    const typedTextWords = {
-        ru: ['Инженер', 'Тестировщик', 'Автоматизатор', 'Специалист'],
-        en: ['Engineer', 'Tester', 'Automator', 'Specialist']
-    };
-    window.typedWords = typedTextWords[currentLanguage];
 }
 
 // Переключение языка
@@ -245,6 +238,44 @@ function setLanguage(lang) {
     }
     
     localStorage.setItem('language', lang);
+}
+
+// Переключение темы с плавной анимацией
+function initializeThemeToggle() {
+    const toggle = document.getElementById('themeToggle');
+    const icon = toggle.querySelector('i');
+    const overlay = document.querySelector('.theme-overlay');
+    
+    toggle.addEventListener('click', (e) => {
+        const rect = toggle.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+        
+        overlay.style.setProperty('--x', x + 'px');
+        overlay.style.setProperty('--y', y + 'px');
+        overlay.classList.add('active');
+        
+        toggle.style.transform = 'scale(0.9)';
+        
+        setTimeout(() => {
+            document.body.classList.toggle('light-theme');
+            
+            if (document.body.classList.contains('light-theme')) {
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'light');
+            } else {
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'dark');
+            }
+            
+            toggle.style.transform = 'scale(1)';
+            
+            // Плавное затухание эффекта
+            setTimeout(() => {
+                overlay.classList.remove('active');
+            }, 800); // Увеличил время для плавности
+        }, 150);
+    });
 }
 
 // Частицы с взаимодействием с курсором
@@ -336,6 +367,8 @@ function initializeParticles() {
 // Печатающийся текст
 function initializeTypedText() {
     const typedText = document.querySelector('.typed-text');
+    if (!typedText) return;
+    
     const words = {
         ru: ['Инженер', 'Тестировщик', 'Автоматизатор', 'Специалист'],
         en: ['Engineer', 'Tester', 'Automator', 'Specialist']
@@ -371,7 +404,7 @@ function initializeTypedText() {
     type();
 }
 
-// Навыки с плавными анимациями
+// Навыки
 function initializeSkills() {
     const skillsGrid = document.getElementById('skillsGrid');
     if (!skillsGrid) return;
@@ -386,7 +419,7 @@ function initializeSkills() {
             skillsGrid.innerHTML = filtered.map(skill => {
                 const name = skill.name[currentLanguage] || skill.name.ru;
                 return `
-                    <div class="skill-item" style="animation-delay: ${Math.random() * 0.3}s">
+                    <div class="skill-item">
                         <div class="skill-name">
                             <i class="${skill.icon}"></i>
                             <span>${name}</span>
@@ -424,42 +457,121 @@ function initializeSkills() {
     });
 }
 
-// Переключение темы с эффектом
-function initializeThemeToggle() {
-    const toggle = document.getElementById('themeToggle');
-    const icon = toggle.querySelector('i');
-    const overlay = document.querySelector('.theme-overlay');
-    
-    toggle.addEventListener('click', (e) => {
-        const rect = toggle.getBoundingClientRect();
-        const x = rect.left + rect.width / 2;
-        const y = rect.top + rect.height / 2;
-        
-        overlay.style.setProperty('--x', x + 'px');
-        overlay.style.setProperty('--y', y + 'px');
-        overlay.classList.add('active');
-        
-        toggle.style.transform = 'scale(0.9)';
-        
-        setTimeout(() => {
-            document.body.classList.toggle('light-theme');
-            
-            if (document.body.classList.contains('light-theme')) {
-                icon.className = 'fas fa-sun';
-                localStorage.setItem('theme', 'light');
-            } else {
-                icon.className = 'fas fa-moon';
-                localStorage.setItem('theme', 'dark');
+// Навигация
+function initializeNavbar() {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-links');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    if (hamburger) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = document.querySelector(link.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+                if (navMenu) {
+                    navMenu.classList.remove('active');
+                    if (hamburger) hamburger.classList.remove('active');
+                }
             }
-            
-            toggle.style.transform = 'scale(1)';
-            
-            setTimeout(() => {
-                overlay.classList.remove('active');
-            }, 500);
-        }, 300);
+        });
+    });
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        document.querySelectorAll('section').forEach(section => {
+            const sectionTop = section.offsetTop - 100;
+            const sectionBottom = sectionTop + section.offsetHeight;
+            if (window.scrollY >= sectionTop && window.scrollY < sectionBottom) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
     });
 }
 
-// Остальные функции (навигация, анимация статистики, копирование, скролл анимации) 
-// остаются такими же как в предыдущей версии...
+// Анимация статистики
+function initializeStatsAnimation() {
+    const stats = document.querySelectorAll('.stat-number');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = parseInt(entry.target.dataset.target);
+                animateNumber(entry.target, 0, target, 2000);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    stats.forEach(stat => observer.observe(stat));
+}
+
+function animateNumber(element, start, end, duration) {
+    let startTime = null;
+    
+    function animate(currentTime) {
+        if (!startTime) startTime = currentTime;
+        const progress = Math.min((currentTime - startTime) / duration, 1);
+        element.textContent = Math.floor(progress * (end - start) + start);
+        
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        }
+    }
+    
+    requestAnimationFrame(animate);
+}
+
+// Копирование в буфер
+window.copyToClipboard = function(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification('Скопировано!');
+    });
+};
+
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 2000);
+}
+
+// Анимации при скролле
+function initializeScrollAnimations() {
+    const animatedElements = document.querySelectorAll('.skill-item, .info-card, .project-card, .contact-card, .timeline-item');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1 });
+
+    animatedElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+}
