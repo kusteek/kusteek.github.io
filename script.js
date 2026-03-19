@@ -367,7 +367,6 @@ class LanguageManager {
     }
 }
 
-// ===== Skills Manager с анимацией =====
 class SkillsManager {
     constructor() {
         this.skillsGrid = document.getElementById('skillsGrid');
