@@ -1,557 +1,695 @@
-// ===== Particles.js Effect =====
-class ParticlesNetwork {
-    constructor(canvasId) {
-        this.canvas = document.getElementById(canvasId);
-        if (!this.canvas) return;
+// ===== Инициализация и глобальные переменные =====
+let currentTheme = 'dark';
+let currentLang = 'ru';
+let typedInstance = null;
+let particlesInitialized = false;
+let particlesCanvas = null;
+let ctx = null;
+let particles = [];
+let animationFrame = null;
+
+// Объект с переводами
+const translations = {
+    ru: {
+        // Навигация
+        nav_home: 'Главная',
+        nav_about: 'Обо мне',
+        nav_skills: 'Навыки',
+        nav_experience: 'Опыт',
+        nav_projects: 'Проекты',
+        nav_contact: 'Контакты',
         
-        this.ctx = this.canvas.getContext('2d');
-        this.particles = [];
-        this.particleCount = 80;
-        this.mouseX = 0;
-        this.mouseY = 0;
-        this.isMouseInside = false;
-
-        this.init();
-        this.animate();
-        this.addEventListeners();
-    }
-
-    init() {
-        this.resize();
-        this.createParticles();
-    }
-
-    resize() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
-    }
-
-    createParticles() {
-        for (let i = 0; i < this.particleCount; i++) {
-            this.particles.push({
-                x: Math.random() * this.canvas.width,
-                y: Math.random() * this.canvas.height,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
-                radius: Math.random() * 2 + 1
-            });
-        }
-    }
-
-    drawParticles() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.fillStyle = document.body.classList.contains('light-theme') ? '#6c5ce7' : '#a29bfe';
+        // Hero секция
+        available: '🔥 Доступен для работы',
+        hello: 'Привет, я',
+        name: 'Клёк Артём',
+        description: 'Стремлюсь к постоянному развитию в сфере обеспечения качества и тестирования. Увлечен автоматизацией и поиском новых подходов к улучшению процессов.',
+        contact_me: 'Связаться со мной',
+        years: 'Года опыта',
+        bugs: 'багов',
+        projects: 'проектов',
+        bug_hunter: 'Bug Hunter',
+        auto_qa: 'Auto QA',
+        quality: 'Quality',
         
-        for (let particle of this.particles) {
-            this.ctx.beginPath();
-            this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-            this.ctx.fillStyle = document.body.classList.contains('light-theme') ? '#6c5ce7' : '#a29bfe';
-            this.ctx.fill();
+        // Обо мне
+        about_highlight: 'QA-инженер, стремящийся к совершенству в обеспечении качества',
+        about_text: 'За 2 года работы в IT участвовал в тестировании различных проектов. Постоянно учусь новому, слежу за трендами в тестировании и применяю современные подходы в работе.',
+        projects_count: 'Проектов',
+        bugs_count: 'Найденных багов',
+        location: 'Локация',
+        languages: 'Языки',
+        russian: 'Русский (Native)',
+        english: 'English (B1 - Intermediate)',
+        interests: 'Интересы',
+        interest_1: 'Изучение новых технологий',
+        interest_2: 'Автоматизация всего',
+        interest_3: 'Оптимизация процессов',
+        interest_4: 'Поиск нестандартных решений',
+        interest_5: 'Постоянное саморазвитие',
+        
+        // Навыки
+        what_i_can: 'Что я умею',
+        skills: 'Навыки',
+        all: 'Все',
+        automation: 'Автоматизация',
+        manual: 'Ручное тестирование',
+        tools: 'Инструменты',
+        
+        // Опыт
+        career_path: 'Карьерный путь',
+        experience: 'Опыт работы',
+        vtb_1: 'Проектирование и планирование тестирования',
+        vtb_2: 'Выполнение комплексного тестирования (функциональное, регрессионное, smoke и т.д.)',
+        vtb_3: 'Управление дефектами и отслеживание качества',
+        vtb_4: 'Работа с тестовыми данными и тестовым окружением',
+        vtb_5: 'Отчётность и анализ результатов тестирования',
+        vtb_6: 'Интеграция в процессы разработки',
+        vtb_7: 'Демонстрация функционала заказчику (ПСИ)',
+        neoflex_1: 'Проектирование и планирование тестирования',
+        neoflex_2: 'Выполнение комплексного тестирования',
+        neoflex_3: 'Управление дефектами и отслеживание качества',
+        neoflex_4: 'Работа с тестовыми данными',
+        neoflex_5: 'Отчётность и анализ результатов',
+        
+        // Проекты
+        my_projects: 'Мои работы',
+        projects_title: 'Проекты',
+        project_title: 'Автоматизированное тестирование Tutu.ru',
+        project_desc: 'Разработка фреймворка для автоматизации тестирования веб-приложения Tutu.ru. Включает UI и API тесты с генерацией отчетов.',
+        open_github: 'Открыть на GitHub →',
+        
+        // CTA
+        cta_title: 'Открыт к предложениям!',
+        cta_text: 'Готов применять свои навыки и развиваться в новой команде',
+        cta_button: 'Написать мне',
+        
+        // Контакты
+        get_in_touch: 'Свяжитесь со мной',
+        contacts: 'Контакты',
+        qa_engineer: 'QA Инженер',
+        made_with: 'Сделано с ❤️ в Новосибирске',
+        
+        // Название страницы
+        page_title: 'Клёк Артём - QA Инженер'
+    },
+    en: {
+        // Navigation
+        nav_home: 'Home',
+        nav_about: 'About',
+        nav_skills: 'Skills',
+        nav_experience: 'Experience',
+        nav_projects: 'Projects',
+        nav_contact: 'Contact',
+        
+        // Hero section
+        available: '🔥 Available for work',
+        hello: "Hi, I'm",
+        name: 'Artem Klyok',
+        description: 'I strive for continuous development in the field of quality assurance and testing. Passionate about automation and finding new approaches to process improvement.',
+        contact_me: 'Contact me',
+        years: 'Years of experience',
+        bugs: 'bugs found',
+        projects: 'projects',
+        bug_hunter: 'Bug Hunter',
+        auto_qa: 'Auto QA',
+        quality: 'Quality',
+        
+        // About
+        about_highlight: 'QA Engineer striving for excellence in quality assurance',
+        about_text: 'For 2 years in IT, I have participated in testing various projects. I constantly learn new things, follow testing trends, and apply modern approaches in my work.',
+        projects_count: 'Projects',
+        bugs_count: 'Bugs found',
+        location: 'Location',
+        languages: 'Languages',
+        russian: 'Russian (Native)',
+        english: 'English (B1 - Intermediate)',
+        interests: 'Interests',
+        interest_1: 'Learning new technologies',
+        interest_2: 'Automating everything',
+        interest_3: 'Process optimization',
+        interest_4: 'Finding non-standard solutions',
+        interest_5: 'Continuous self-development',
+        
+        // Skills
+        what_i_can: 'What I can do',
+        skills: 'Skills',
+        all: 'All',
+        automation: 'Automation',
+        manual: 'Manual testing',
+        tools: 'Tools',
+        
+        // Experience
+        career_path: 'Career path',
+        experience: 'Experience',
+        vtb_1: 'Test design and planning',
+        vtb_2: 'Comprehensive testing (functional, regression, smoke, etc.)',
+        vtb_3: 'Defect management and quality tracking',
+        vtb_4: 'Working with test data and test environment',
+        vtb_5: 'Reporting and test results analysis',
+        vtb_6: 'Integration into development processes',
+        vtb_7: 'Feature demonstration to the customer (UAT)',
+        neoflex_1: 'Test design and planning',
+        neoflex_2: 'Comprehensive testing',
+        neoflex_3: 'Defect management and quality tracking',
+        neoflex_4: 'Working with test data',
+        neoflex_5: 'Reporting and results analysis',
+        
+        // Projects
+        my_projects: 'My work',
+        projects_title: 'Projects',
+        project_title: 'Automated testing of Tutu.ru',
+        project_desc: 'Development of a framework for automated testing of the Tutu.ru web application. Includes UI and API tests with report generation.',
+        open_github: 'Open on GitHub →',
+        
+        // CTA
+        cta_title: "Open to offers!",
+        cta_text: 'Ready to apply my skills and grow in a new team',
+        cta_button: 'Write to me',
+        
+        // Contact
+        get_in_touch: 'Get in touch',
+        contacts: 'Contacts',
+        qa_engineer: 'QA Engineer',
+        made_with: 'Made with ❤️ in Novosibirsk',
+        
+        // Page title
+        page_title: 'Artem Klyok - QA Engineer'
+    }
+};
 
-            for (let other of this.particles) {
-                const dx = particle.x - other.x;
-                const dy = particle.y - other.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < 100) {
-                    this.ctx.beginPath();
-                    this.ctx.strokeStyle = document.body.classList.contains('light-theme') ? '#6c5ce7' : '#a29bfe';
-                    this.ctx.lineWidth = 0.2;
-                    this.ctx.moveTo(particle.x, particle.y);
-                    this.ctx.lineTo(other.x, other.y);
-                    this.ctx.stroke();
+// ===== Функция перевода страницы =====
+function translatePage(lang) {
+    // Сохраняем выбранный язык
+    currentLang = lang;
+    localStorage.setItem('preferred-language', lang);
+    
+    // Обновляем активный класс у переключателя языка
+    document.querySelectorAll('.language-toggle span').forEach(span => {
+        span.classList.remove('active');
+    });
+    document.querySelector(`.lang-${lang}`).classList.add('active');
+    
+    // Переводим все элементы с атрибутом data-i18n
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+            // Для input элементов переводим placeholder или value
+            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                if (element.placeholder) {
+                    element.placeholder = translations[lang][key];
+                } else if (element.value) {
+                    element.value = translations[lang][key];
                 }
-            }
-
-            if (this.isMouseInside) {
-                const dx = particle.x - this.mouseX;
-                const dy = particle.y - this.mouseY;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance < 100) {
-                    const angle = Math.atan2(dy, dx);
-                    const force = (100 - distance) / 100;
-                    particle.x += Math.cos(angle) * force * 2;
-                    particle.y += Math.sin(angle) * force * 2;
-                }
+            } 
+            // Для обычных элементов переводим текст
+            else {
+                element.textContent = translations[lang][key];
             }
         }
+    });
+    
+    // Отдельно переводим имя и фамилию в заголовке
+    const nameElement = document.querySelector('.gradient-text');
+    if (nameElement && translations[lang] && translations[lang]['name']) {
+        nameElement.textContent = translations[lang]['name'];
     }
-
-    updateParticles() {
-        for (let particle of this.particles) {
-            particle.x += particle.vx;
-            particle.y += particle.vy;
-
-            if (particle.x < 0 || particle.x > this.canvas.width) particle.vx *= -1;
-            if (particle.y < 0 || particle.y > this.canvas.height) particle.vy *= -1;
-        }
+    
+    // Переводим заголовок страницы
+    if (translations[lang] && translations[lang]['page_title']) {
+        document.title = translations[lang]['page_title'];
     }
-
-    animate() {
-        this.updateParticles();
-        this.drawParticles();
-        requestAnimationFrame(() => this.animate());
-    }
-
-    addEventListeners() {
-        window.addEventListener('resize', () => this.resize());
-
-        this.canvas.addEventListener('mousemove', (e) => {
-            this.mouseX = e.clientX;
-            this.mouseY = e.clientY;
-            this.isMouseInside = true;
-        });
-
-        this.canvas.addEventListener('mouseleave', () => {
-            this.isMouseInside = false;
-        });
+    
+    // Обновляем текст в typed.js если он инициализирован
+    if (typedInstance) {
+        typedInstance.destroy();
+        initTyped();
     }
 }
 
-// ===== Typed Text Effect =====
-class TypedText {
-    constructor(elementClass, words) {
-        this.element = document.querySelector(elementClass);
-        if (!this.element) return;
-        
-        this.words = words;
-        this.currentWordIndex = 0;
-        this.currentText = '';
-        this.isDeleting = false;
-        this.typeSpeed = 100;
-
-        this.type();
+// ===== Загрузка языка при старте =====
+function loadSavedLanguage() {
+    const savedLang = localStorage.getItem('preferred-language');
+    if (savedLang && (savedLang === 'ru' || savedLang === 'en')) {
+        currentLang = savedLang;
+        translatePage(savedLang);
+    } else {
+        // По умолчанию русский
+        translatePage('ru');
     }
+}
 
-    type() {
-        const currentWord = this.words[this.currentWordIndex];
+// ===== Particles =====
+function initParticles() {
+    if (particlesInitialized) return;
+    
+    particlesCanvas = document.getElementById('particles-canvas');
+    if (!particlesCanvas) return;
+    
+    ctx = particlesCanvas.getContext('2d');
+    
+    function resizeCanvas() {
+        particlesCanvas.width = window.innerWidth;
+        particlesCanvas.height = window.innerHeight;
+    }
+    
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    
+    // Создание частиц
+    const particleCount = 50;
+    particles = [];
+    
+    for (let i = 0; i < particleCount; i++) {
+        particles.push({
+            x: Math.random() * particlesCanvas.width,
+            y: Math.random() * particlesCanvas.height,
+            radius: Math.random() * 2 + 1,
+            speedX: (Math.random() - 0.5) * 0.5,
+            speedY: (Math.random() - 0.5) * 0.5,
+            color: `rgba(108, 92, 231, ${Math.random() * 0.3})`
+        });
+    }
+    
+    function animate() {
+        if (!ctx || !particlesCanvas) return;
         
-        if (this.isDeleting) {
-            this.currentText = currentWord.substring(0, this.currentText.length - 1);
+        ctx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
+        
+        particles.forEach(particle => {
+            particle.x += particle.speedX;
+            particle.y += particle.speedY;
+            
+            // Отскок от границ
+            if (particle.x < 0 || particle.x > particlesCanvas.width) {
+                particle.speedX *= -1;
+            }
+            if (particle.y < 0 || particle.y > particlesCanvas.height) {
+                particle.speedY *= -1;
+            }
+            
+            ctx.beginPath();
+            ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+            ctx.fillStyle = particle.color;
+            ctx.fill();
+        });
+        
+        animationFrame = requestAnimationFrame(animate);
+    }
+    
+    animate();
+    particlesInitialized = true;
+}
+
+// ===== Typed.js эффект =====
+function initTyped() {
+    const typedElement = document.querySelector('.typed-text');
+    if (!typedElement) return;
+    
+    const words = currentLang === 'ru' 
+        ? ['инженер', 'тестировщик', 'автоматизатор']
+        : ['Engineer', 'Tester', 'Automation'];
+    
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let isWaiting = false;
+    
+    function type() {
+        const currentWord = words[wordIndex];
+        
+        if (isDeleting) {
+            typedElement.textContent = currentWord.substring(0, charIndex - 1);
+            charIndex--;
         } else {
-            this.currentText = currentWord.substring(0, this.currentText.length + 1);
+            typedElement.textContent = currentWord.substring(0, charIndex + 1);
+            charIndex++;
         }
-
-        this.element.textContent = this.currentText;
-
-        if (!this.isDeleting && this.currentText === currentWord) {
-            this.isDeleting = true;
-            setTimeout(() => this.type(), 2000);
-        } else if (this.isDeleting && this.currentText === '') {
-            this.isDeleting = false;
-            this.currentWordIndex = (this.currentWordIndex + 1) % this.words.length;
-            setTimeout(() => this.type(), 500);
+        
+        if (!isDeleting && charIndex === currentWord.length) {
+            isWaiting = true;
+            setTimeout(() => {
+                isDeleting = true;
+                isWaiting = false;
+            }, 2000);
+        }
+        
+        if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            wordIndex = (wordIndex + 1) % words.length;
+        }
+        
+        if (!isWaiting) {
+            const speed = isDeleting ? 50 : 100;
+            setTimeout(type, speed);
         } else {
-            setTimeout(() => this.type(), this.typeSpeed);
+            setTimeout(type, 100);
         }
     }
+    
+    type();
 }
 
 // ===== Theme Toggle =====
-class ThemeManager {
-    constructor() {
-        this.themeToggle = document.getElementById('themeToggle');
-        this.themeOverlay = document.querySelector('.theme-overlay');
-        this.body = document.body;
+function initThemeToggle() {
+    const themeToggle = document.getElementById('themeToggle');
+    const themeOverlay = document.querySelector('.theme-overlay');
+    
+    if (!themeToggle) return;
+    
+    // Загружаем сохраненную тему
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.body.classList.toggle('light-theme', savedTheme === 'light');
+    updateThemeIcon(savedTheme === 'light');
+    
+    themeToggle.addEventListener('click', () => {
+        // Активируем overlay для плавного перехода
+        themeOverlay.classList.add('active');
         
-        this.init();
-    }
-
-    init() {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light') {
-            this.body.classList.add('light-theme');
-            this.updateIcon('sun');
-        }
-
-        this.themeToggle.addEventListener('click', () => this.toggleTheme());
-    }
-
-    toggleTheme() {
-        this.themeOverlay.classList.add('active');
-        
+        // Меняем тему после небольшой задержки
         setTimeout(() => {
-            this.body.classList.toggle('light-theme');
+            const isLight = document.body.classList.contains('light-theme');
             
-            if (this.body.classList.contains('light-theme')) {
-                localStorage.setItem('theme', 'light');
-                this.updateIcon('sun');
-            } else {
+            if (isLight) {
+                document.body.classList.remove('light-theme');
                 localStorage.setItem('theme', 'dark');
-                this.updateIcon('moon');
+                updateThemeIcon(false);
+            } else {
+                document.body.classList.add('light-theme');
+                localStorage.setItem('theme', 'light');
+                updateThemeIcon(true);
             }
             
+            // Деактивируем overlay
             setTimeout(() => {
-                this.themeOverlay.classList.remove('active');
-            }, 400);
-        }, 300);
-    }
+                themeOverlay.classList.remove('active');
+            }, 300);
+        }, 150);
+    });
+}
 
-    updateIcon(icon) {
-        const iconElement = this.themeToggle.querySelector('i');
-        iconElement.className = icon === 'sun' ? 'fas fa-sun' : 'fas fa-moon';
+function updateThemeIcon(isLight) {
+    const themeToggle = document.getElementById('themeToggle');
+    if (!themeToggle) return;
+    
+    const icon = themeToggle.querySelector('i');
+    if (icon) {
+        icon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
     }
 }
 
-// ===== Language Manager =====
-class LanguageManager {
-    constructor() {
-        this.langToggle = document.getElementById('languageToggle');
-        this.langRu = document.querySelector('.lang-ru');
-        this.langEn = document.querySelector('.lang-en');
-        this.currentLang = localStorage.getItem('language') || 'ru';
-        
-        this.translations = {
-            ru: {
-                nav_home: 'Главная',
-                nav_about: 'Обо мне',
-                nav_skills: 'Навыки',
-                nav_experience: 'Опыт',
-                nav_projects: 'Проекты',
-                nav_contact: 'Контакты',
-                available: '🔥 Доступен для работы',
-                hello: 'Привет, я',
-                description: 'Стремлюсь к постоянному развитию в сфере обеспечения качества и тестирования. Увлечен автоматизацией и поиском новых подходов к улучшению процессов.',
-                contact_me: 'Связаться со мной',
-                years: 'Года опыта',
-                bugs: 'багов',
-                projects: 'проектов',
-                bug_hunter: 'Bug Hunter',
-                auto_qa: 'Auto QA',
-                quality: 'Quality',
-                about_highlight: 'QA-инженер, стремящийся к совершенству в обеспечении качества',
-                about_text: 'За 2 года работы в IT участвовал в тестировании различных проектов. Постоянно учусь новому, слежу за трендами в тестировании и применяю современные подходы в работе.',
-                projects_count: 'Проектов',
-                bugs_count: 'Найденных багов',
-                location: 'Локация',
-                languages: 'Языки',
-                russian: 'Русский (Native)',
-                english: 'English (B1 - Intermediate)',
-                interests: 'Интересы',
-                interest_1: 'Изучение новых технологий',
-                interest_2: 'Автоматизация всего',
-                interest_3: 'Оптимизация процессов',
-                interest_4: 'Поиск нестандартных решений',
-                interest_5: 'Постоянное саморазвитие',
-                what_i_can: 'Что я умею',
-                skills: 'Навыки',
-                all: 'Все',
-                automation: 'Автоматизация',
-                manual: 'Ручное тестирование',
-                tools: 'Инструменты',
-                career_path: 'Карьерный путь',
-                experience: 'Опыт работы',
-                vtb_1: 'Проектирование и планирование тестирования',
-                vtb_2: 'Выполнение комплексного тестирования (функциональное, регрессионное, smoke и т.д.)',
-                vtb_3: 'Управление дефектами и отслеживание качества',
-                vtb_4: 'Работа с тестовыми данными и тестовым окружением',
-                vtb_5: 'Отчётность и анализ результатов тестирования',
-                vtb_6: 'Интеграция в процессы разработки',
-                vtb_7: 'Демонстрация функционала заказчику (ПСИ)',
-                neoflex_1: 'Проектирование и планирование тестирования',
-                neoflex_2: 'Выполнение комплексного тестирования',
-                neoflex_3: 'Управление дефектами и отслеживание качества',
-                neoflex_4: 'Работа с тестовыми данными',
-                neoflex_5: 'Отчётность и анализ результатов',
-                my_projects: 'Мои работы',
-                projects_title: 'Проекты',
-                project_title: 'Автоматизированное тестирование Tutu.ru',
-                project_desc: 'Разработка фреймворка для автоматизации тестирования веб-приложения Tutu.ru. Включает UI и API тесты с генерацией отчетов.',
-                open_github: 'Открыть на GitHub →',
-                cta_title: 'Открыт к предложениям!',
-                cta_text: 'Готов применять свои навыки и развиваться в новой команде',
-                cta_button: 'Написать мне',
-                get_in_touch: 'Свяжитесь со мной',
-                contacts: 'Контакты',
-                qa_engineer: 'QA Инженер',
-                made_with: 'Сделано с ❤️ в Новосибирске'
-            },
-            en: {
-                nav_home: 'Home',
-                nav_about: 'About',
-                nav_skills: 'Skills',
-                nav_experience: 'Experience',
-                nav_projects: 'Projects',
-                nav_contact: 'Contact',
-                available: '🔥 Available for work',
-                hello: "Hi, I'm",
-                description: 'I strive for continuous development in the field of quality assurance and testing. Passionate about automation and finding new approaches to improve processes.',
-                contact_me: 'Contact me',
-                years: 'Years exp.',
-                bugs: 'bugs',
-                projects: 'projects',
-                bug_hunter: 'Bug Hunter',
-                auto_qa: 'Auto QA',
-                quality: 'Quality',
-                about_highlight: 'QA Engineer striving for excellence in quality assurance',
-                about_text: 'For 2 years in IT, I have participated in testing various projects. I constantly learn new things, follow testing trends and apply modern approaches in my work.',
-                projects_count: 'Projects',
-                bugs_count: 'Bugs found',
-                location: 'Location',
-                languages: 'Languages',
-                russian: 'Russian (Native)',
-                english: 'English (B1 - Intermediate)',
-                interests: 'Interests',
-                interest_1: 'Learning new technologies',
-                interest_2: 'Automating everything',
-                interest_3: 'Process optimization',
-                interest_4: 'Finding non-standard solutions',
-                interest_5: 'Continuous self-development',
-                what_i_can: 'What I do',
-                skills: 'Skills',
-                all: 'All',
-                automation: 'Automation',
-                manual: 'Manual Testing',
-                tools: 'Tools',
-                career_path: 'Career path',
-                experience: 'Experience',
-                vtb_1: 'Test design and planning',
-                vtb_2: 'Comprehensive testing (functional, regression, smoke, etc.)',
-                vtb_3: 'Defect management and quality tracking',
-                vtb_4: 'Working with test data and test environment',
-                vtb_5: 'Reporting and test results analysis',
-                vtb_6: 'Integration into development processes',
-                vtb_7: 'Functionality demonstration to the customer (UAT)',
-                neoflex_1: 'Test design and planning',
-                neoflex_2: 'Comprehensive testing',
-                neoflex_3: 'Defect management and quality tracking',
-                neoflex_4: 'Working with test data',
-                neoflex_5: 'Reporting and analysis of results',
-                my_projects: 'My work',
-                projects_title: 'Projects',
-                project_title: 'Automated testing of Tutu.ru',
-                project_desc: 'Development of a framework for automating testing of the Tutu.ru web application. Includes UI and API tests with report generation.',
-                open_github: 'Open on GitHub →',
-                cta_title: "I'm open to offers!",
-                cta_text: 'Ready to apply my skills and develop in a new team',
-                cta_button: 'Write to me',
-                get_in_touch: 'Get in touch',
-                contacts: 'Contacts',
-                qa_engineer: 'QA Engineer',
-                made_with: 'Made with ❤️ in Novosibirsk'
-            }
-        };
-        
-        this.init();
-    }
+// ===== Language Toggle =====
+function initLanguageToggle() {
+    const langToggle = document.getElementById('languageToggle');
+    if (!langToggle) return;
+    
+    langToggle.addEventListener('click', (e) => {
+        if (e.target.classList.contains('lang-ru')) {
+            translatePage('ru');
+        } else if (e.target.classList.contains('lang-en')) {
+            translatePage('en');
+        }
+    });
+}
 
-    init() {
-        this.setLanguage(this.currentLang);
-        
-        this.langRu.addEventListener('click', () => this.setLanguage('ru'));
-        this.langEn.addEventListener('click', () => this.setLanguage('en'));
-    }
+// ===== Copy to clipboard =====
+window.copyToClipboard = function(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        // Показываем уведомление (можно добавить стили)
+        alert('Email скопирован!');
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+    });
+};
 
-    setLanguage(lang) {
-        this.currentLang = lang;
-        localStorage.setItem('language', lang);
+// ===== Active Navigation Highlight =====
+function initNavigation() {
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    window.addEventListener('scroll', () => {
+        let current = '';
         
-        this.langRu.classList.toggle('active', lang === 'ru');
-        this.langEn.classList.toggle('active', lang === 'en');
-        
-        document.querySelectorAll('[data-i18n]').forEach(element => {
-            const key = element.getAttribute('data-i18n');
-            if (this.translations[lang][key]) {
-                if (element.children.length > 0) {
-                    const span = element.querySelector('span');
-                    if (span) {
-                        span.textContent = this.translations[lang][key];
-                    }
-                } else {
-                    element.textContent = this.translations[lang][key];
-                }
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            
+            if (scrollY >= sectionTop - 200) {
+                current = section.getAttribute('id');
             }
         });
-
-        const projectsTitle = document.querySelector('#projects .section-title');
-        if (projectsTitle && this.translations[lang].projects_title) {
-            projectsTitle.textContent = this.translations[lang].projects_title;
-        }
-    }
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
+    });
 }
 
-// ===== Skills Manager с анимацией =====
-class SkillsManager {
-    constructor() {
-        this.skillsGrid = document.getElementById('skillsGrid');
-        this.filterBtns = document.querySelectorAll('.filter-btn');
-        this.skills = [
-            { name: 'Java', icon: 'fab fa-java', level: 85, category: 'automation' },
-            { name: 'Python', icon: 'fab fa-python', level: 70, category: 'automation' },
-            { name: 'Selenium', icon: 'fas fa-robot', level: 85, category: 'automation' },
-            { name: 'JUnit', icon: 'fas fa-flask', level: 80, category: 'automation' },
-            { name: 'TestNG', icon: 'fas fa-vial', level: 75, category: 'automation' },
-            { name: 'REST Assured', icon: 'fas fa-cloud', level: 80, category: 'automation' },
-            { name: 'Manual Testing', icon: 'fas fa-clipboard-list', level: 95, category: 'manual' },
+// ===== Mobile Menu =====
+function initMobileMenu() {
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (!hamburger || !navLinks) return;
+    
+    hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        hamburger.classList.toggle('active');
+    });
+    
+    // Закрываем меню при клике на ссылку
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            hamburger.classList.remove('active');
+        });
+    });
+}
+
+// ===== Skills Grid =====
+function initSkills() {
+    const skillsGrid = document.getElementById('skillsGrid');
+    if (!skillsGrid) return;
+    
+    const skillsData = {
+        all: [
+            { name: 'Jira', icon: 'fab fa-jira', level: 85, category: 'tools' },
+            { name: 'TestRail', icon: 'fas fa-tasks', level: 80, category: 'tools' },
+            { name: 'Postman', icon: 'fas fa-code', level: 85, category: 'tools' },
+            { name: 'SQL', icon: 'fas fa-database', level: 75, category: 'tools' },
+            { name: 'Git', icon: 'fab fa-git-alt', level: 80, category: 'tools' },
+            { name: 'Selenium', icon: 'fas fa-robot', level: 70, category: 'automation' },
+            { name: 'Java', icon: 'fab fa-java', level: 65, category: 'automation' },
+            { name: 'REST API', icon: 'fas fa-cloud', level: 75, category: 'automation' },
             { name: 'Test Design', icon: 'fas fa-pencil-ruler', level: 90, category: 'manual' },
-            { name: 'Bug Tracking', icon: 'fas fa-bug', level: 95, category: 'manual' },
-            { name: 'Postman', icon: 'fas fa-paper-plane', level: 90, category: 'tools' },
-            { name: 'Jira', icon: 'fab fa-jira', level: 95, category: 'tools' },
-            { name: 'Git', icon: 'fab fa-git-alt', level: 85, category: 'tools' },
-            { name: 'SQL', icon: 'fas fa-database', level: 80, category: 'tools' },
-            { name: 'Docker', icon: 'fab fa-docker', level: 70, category: 'tools' },
-            { name: 'Jenkins', icon: 'fab fa-jenkins', level: 65, category: 'tools' }
-        ];
+            { name: 'Regression Testing', icon: 'fas fa-redo-alt', level: 85, category: 'manual' },
+            { name: 'Smoke Testing', icon: 'fas fa-fire', level: 85, category: 'manual' },
+            { name: 'Chrome DevTools', icon: 'fab fa-chrome', level: 80, category: 'tools' },
+            { name: 'Charles Proxy', icon: 'fas fa-network-wired', level: 70, category: 'tools' },
+            { name: 'Agile/Scrum', icon: 'fas fa-users-cog', level: 85, category: 'manual' },
+            { name: 'API Testing', icon: 'fas fa-exchange-alt', level: 80, category: 'automation' }
+        ],
+        automation: [
+            { name: 'Selenium', icon: 'fas fa-robot', level: 70, category: 'automation' },
+            { name: 'Java', icon: 'fab fa-java', level: 65, category: 'automation' },
+            { name: 'REST API', icon: 'fas fa-cloud', level: 75, category: 'automation' },
+            { name: 'API Testing', icon: 'fas fa-exchange-alt', level: 80, category: 'automation' }
+        ],
+        manual: [
+            { name: 'Test Design', icon: 'fas fa-pencil-ruler', level: 90, category: 'manual' },
+            { name: 'Regression Testing', icon: 'fas fa-redo-alt', level: 85, category: 'manual' },
+            { name: 'Smoke Testing', icon: 'fas fa-fire', level: 85, category: 'manual' },
+            { name: 'Agile/Scrum', icon: 'fas fa-users-cog', level: 85, category: 'manual' }
+        ],
+        tools: [
+            { name: 'Jira', icon: 'fab fa-jira', level: 85, category: 'tools' },
+            { name: 'TestRail', icon: 'fas fa-tasks', level: 80, category: 'tools' },
+            { name: 'Postman', icon: 'fas fa-code', level: 85, category: 'tools' },
+            { name: 'SQL', icon: 'fas fa-database', level: 75, category: 'tools' },
+            { name: 'Git', icon: 'fab fa-git-alt', level: 80, category: 'tools' },
+            { name: 'Chrome DevTools', icon: 'fab fa-chrome', level: 80, category: 'tools' },
+            { name: 'Charles Proxy', icon: 'fas fa-network-wired', level: 70, category: 'tools' }
+        ]
+    };
+    
+    function renderSkills(category = 'all') {
+        const skills = skillsData[category] || skillsData.all;
         
-        this.init();
-    }
-
-    init() {
-        this.renderSkills('all');
-        this.addFilterListeners();
-    }
-
-    renderSkills(category) {
-        this.skillsGrid.classList.add('fade-out');
+        skillsGrid.classList.add('fade-out');
         
         setTimeout(() => {
-            const filteredSkills = category === 'all' 
-                ? this.skills 
-                : this.skills.filter(skill => skill.category === category);
+            skillsGrid.innerHTML = '';
             
-            this.skillsGrid.innerHTML = '';
-            
-            filteredSkills.forEach((skill, index) => {
-                const card = document.createElement('div');
-                card.className = 'skill-card';
-                card.setAttribute('data-category', skill.category);
-                card.style.animationDelay = `${index * 0.05}s`;
+            skills.forEach(skill => {
+                const skillCard = document.createElement('div');
+                skillCard.className = 'skill-card';
                 
-                card.innerHTML = `
-                    <i class="${skill.icon} skill-icon"></i>
-                    <h3 class="skill-name">${skill.name}</h3>
+                // Переводим название навыка если нужно
+                let skillName = skill.name;
+                if (currentLang === 'en') {
+                    // Базовая карта переводов для навыков
+                    const skillTranslations = {
+                        'Jira': 'Jira',
+                        'TestRail': 'TestRail',
+                        'Postman': 'Postman',
+                        'SQL': 'SQL',
+                        'Git': 'Git',
+                        'Selenium': 'Selenium',
+                        'Java': 'Java',
+                        'REST API': 'REST API',
+                        'Test Design': 'Test Design',
+                        'Regression Testing': 'Regression Testing',
+                        'Smoke Testing': 'Smoke Testing',
+                        'Chrome DevTools': 'Chrome DevTools',
+                        'Charles Proxy': 'Charles Proxy',
+                        'Agile/Scrum': 'Agile/Scrum',
+                        'API Testing': 'API Testing'
+                    };
+                    skillName = skillTranslations[skill.name] || skill.name;
+                }
+                
+                skillCard.innerHTML = `
+                    <div class="skill-icon">
+                        <i class="${skill.icon}"></i>
+                    </div>
+                    <div class="skill-name">${skillName}</div>
                     <div class="skill-level">
                         <div class="skill-progress" style="width: ${skill.level}%"></div>
                     </div>
                 `;
                 
-                this.skillsGrid.appendChild(card);
+                skillsGrid.appendChild(skillCard);
             });
             
-            setTimeout(() => {
-                this.skillsGrid.classList.remove('fade-out');
-            }, 50);
-        }, 400);
+            skillsGrid.classList.remove('fade-out');
+        }, 300);
     }
-
-    addFilterListeners() {
-        this.filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                this.filterBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                
-                const category = btn.getAttribute('data-filter');
-                this.renderSkills(category);
-            });
+    
+    // Инициализация с 'all'
+    renderSkills('all');
+    
+    // Фильтрация
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const filter = btn.getAttribute('data-filter');
+            renderSkills(filter);
         });
-    }
-}
-
-// ===== Copy to Clipboard =====
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        const notification = document.createElement('div');
-        notification.textContent = 'Email скопирован! / Email copied!';
-        notification.style.cssText = `
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--accent-color);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            z-index: 10000;
-            font-weight: 500;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            animation: slideUp 0.3s ease;
-        `;
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.style.opacity = '0';
-            notification.style.transition = 'opacity 0.3s ease';
-            setTimeout(() => notification.remove(), 300);
-        }, 2000);
     });
 }
 
-// ===== Mobile Navigation =====
-class MobileNav {
-    constructor() {
-        this.hamburger = document.querySelector('.hamburger');
-        this.navLinks = document.querySelector('.nav-links');
-        this.navLinksItems = document.querySelectorAll('.nav-link');
-        
-        this.init();
-    }
-
-    init() {
-        if (!this.hamburger || !this.navLinks) return;
-        
-        this.hamburger.addEventListener('click', () => {
-            this.hamburger.classList.toggle('active');
-            this.navLinks.classList.toggle('active');
-            
-            const spans = this.hamburger.querySelectorAll('span');
-            if (this.hamburger.classList.contains('active')) {
-                spans[0].style.transform = 'rotate(45deg) translate(8px, 8px)';
-                spans[1].style.opacity = '0';
-                spans[2].style.transform = 'rotate(-45deg) translate(8px, -8px)';
-            } else {
-                spans[0].style.transform = 'none';
-                spans[1].style.opacity = '1';
-                spans[2].style.transform = 'none';
+// ===== Animate Stats =====
+function animateStats() {
+    const stats = document.querySelectorAll('.stat-number');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const stat = entry.target;
+                const target = stat.getAttribute('data-target');
+                if (!target) return;
+                
+                let current = 0;
+                const increment = target > 100 ? 5 : 1;
+                const duration = 2000;
+                const stepTime = 20;
+                const steps = duration / stepTime;
+                const incrementPerStep = target / steps;
+                
+                const timer = setInterval(() => {
+                    current += incrementPerStep;
+                    if (current >= target) {
+                        stat.textContent = target + (target === '200' ? '+' : '');
+                        clearInterval(timer);
+                    } else {
+                        stat.textContent = Math.floor(current) + (target === '200' ? '+' : '');
+                    }
+                }, stepTime);
+                
+                observer.unobserve(stat);
             }
         });
-
-        this.navLinksItems.forEach(link => {
-            link.addEventListener('click', () => {
-                this.hamburger.classList.remove('active');
-                this.navLinks.classList.remove('active');
-                
-                const spans = this.hamburger.querySelectorAll('span');
-                spans[0].style.transform = 'none';
-                spans[1].style.opacity = '1';
-                spans[2].style.transform = 'none';
-            });
-        });
-    }
+    }, { threshold: 0.5 });
+    
+    stats.forEach(stat => observer.observe(stat));
 }
 
-// ===== Initialize Everything =====
-document.addEventListener('DOMContentLoaded', () => {
-    new ParticlesNetwork('particles-canvas');
-    new TypedText('.typed-text', ['Engineer', 'Automation', 'Manual', 'Specialist']);
-    new ThemeManager();
-    new LanguageManager();
-    new SkillsManager();
-    new MobileNav();
-    
+// ===== Smooth Scroll =====
+function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
+        anchor.addEventListener('click', function(e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
             }
         });
     });
+}
+
+// ===== Reveal Animations on Scroll =====
+function initRevealAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    
+    document.querySelectorAll('.info-card, .timeline-item, .project-card, .contact-card').forEach(el => {
+        observer.observe(el);
+    });
+}
+
+// ===== Инициализация при загрузке страницы =====
+document.addEventListener('DOMContentLoaded', () => {
+    initParticles();
+    loadSavedLanguage();
+    initThemeToggle();
+    initLanguageToggle();
+    initTyped();
+    initNavigation();
+    initMobileMenu();
+    initSkills();
+    animateStats();
+    initSmoothScroll();
+    initRevealAnimations();
+    
+    // Переводим навыки при смене языка (если нужно обновлять названия в skill-card)
+    document.addEventListener('languageChanged', () => {
+        if (typeof renderSkills === 'function') {
+            const activeFilter = document.querySelector('.filter-btn.active')?.getAttribute('data-filter') || 'all';
+            renderSkills(activeFilter);
+        }
+    });
 });
 
-// Add slideUp animation keyframes
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideUp {
-        from {
-            transform: translate(-50%, 20px);
-            opacity: 0;
-        }
-        to {
-            transform: translate(-50%, 0);
-            opacity: 1;
-        }
+// Очистка при размонтировании
+window.addEventListener('beforeunload', () => {
+    if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
     }
-`;
-document.head.appendChild(style);
+});
+
+// Обновляем particles при изменении размера окна
+window.addEventListener('resize', () => {
+    if (particlesCanvas) {
+        particlesCanvas.width = window.innerWidth;
+        particlesCanvas.height = window.innerHeight;
+    }
+});
