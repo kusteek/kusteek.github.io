@@ -180,32 +180,30 @@ const translations = {
 
 // ===== Функция перевода страницы =====
 function translatePage(lang) {
+    console.log('Перевод на язык:', lang); // Для отладки
+    
     // Сохраняем выбранный язык
     currentLang = lang;
     localStorage.setItem('preferred-language', lang);
     
     // Обновляем активный класс у переключателя языка
-    document.querySelectorAll('.language-toggle span').forEach(span => {
+    // Ищем spans внутри language-toggle
+    document.querySelectorAll('#languageToggle span').forEach(span => {
         span.classList.remove('active');
     });
-    document.querySelector(`.lang-${lang}`).classList.add('active');
+    
+    // Активируем нужную кнопку
+    if (lang === 'ru') {
+        document.querySelector('#languageToggle span:first-child').classList.add('active');
+    } else {
+        document.querySelector('#languageToggle span:last-child').classList.add('active');
+    }
     
     // Переводим все элементы с атрибутом data-i18n
     document.querySelectorAll('[data-i18n]').forEach(element => {
         const key = element.getAttribute('data-i18n');
         if (translations[lang] && translations[lang][key]) {
-            // Для input элементов переводим placeholder или value
-            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                if (element.placeholder) {
-                    element.placeholder = translations[lang][key];
-                } else if (element.value) {
-                    element.value = translations[lang][key];
-                }
-            } 
-            // Для обычных элементов переводим текст
-            else {
-                element.textContent = translations[lang][key];
-            }
+            element.textContent = translations[lang][key];
         }
     });
     
@@ -222,9 +220,9 @@ function translatePage(lang) {
     
     // Обновляем текст в typed.js если он инициализирован
     if (typedInstance) {
-        typedInstance.destroy();
-        initTyped();
+        clearInterval(typedInstance);
     }
+    initTyped();
 }
 
 // ===== Загрузка языка при старте =====
@@ -347,7 +345,7 @@ function initTyped() {
         }
     }
     
-    type();
+    typedInstance = setTimeout(type, 1000);
 }
 
 // ===== Theme Toggle =====
@@ -403,11 +401,22 @@ function initLanguageToggle() {
     const langToggle = document.getElementById('languageToggle');
     if (!langToggle) return;
     
+    console.log('Language toggle инициализирован'); // Для отладки
+    
     langToggle.addEventListener('click', (e) => {
-        if (e.target.classList.contains('lang-ru')) {
-            translatePage('ru');
-        } else if (e.target.classList.contains('lang-en')) {
-            translatePage('en');
+        console.log('Клик по переключателю языка', e.target); // Для отладки
+        
+        // Проверяем, на какую кнопку нажали
+        const clickedSpan = e.target;
+        if (clickedSpan.tagName === 'SPAN') {
+            const lang = clickedSpan.textContent.trim().toLowerCase();
+            console.log('Выбран язык:', lang); // Для отладки
+            
+            if (lang === 'ru') {
+                translatePage('ru');
+            } else if (lang === 'en') {
+                translatePage('en');
+            }
         }
     });
 }
@@ -415,8 +424,7 @@ function initLanguageToggle() {
 // ===== Copy to clipboard =====
 window.copyToClipboard = function(text) {
     navigator.clipboard.writeText(text).then(() => {
-        // Показываем уведомление (можно добавить стили)
-        alert('Email скопирован!');
+        alert('Email скопирован! / Email copied!');
     }).catch(err => {
         console.error('Failed to copy: ', err);
     });
@@ -527,35 +535,11 @@ function initSkills() {
                 const skillCard = document.createElement('div');
                 skillCard.className = 'skill-card';
                 
-                // Переводим название навыка если нужно
-                let skillName = skill.name;
-                if (currentLang === 'en') {
-                    // Базовая карта переводов для навыков
-                    const skillTranslations = {
-                        'Jira': 'Jira',
-                        'TestRail': 'TestRail',
-                        'Postman': 'Postman',
-                        'SQL': 'SQL',
-                        'Git': 'Git',
-                        'Selenium': 'Selenium',
-                        'Java': 'Java',
-                        'REST API': 'REST API',
-                        'Test Design': 'Test Design',
-                        'Regression Testing': 'Regression Testing',
-                        'Smoke Testing': 'Smoke Testing',
-                        'Chrome DevTools': 'Chrome DevTools',
-                        'Charles Proxy': 'Charles Proxy',
-                        'Agile/Scrum': 'Agile/Scrum',
-                        'API Testing': 'API Testing'
-                    };
-                    skillName = skillTranslations[skill.name] || skill.name;
-                }
-                
                 skillCard.innerHTML = `
                     <div class="skill-icon">
                         <i class="${skill.icon}"></i>
                     </div>
-                    <div class="skill-name">${skillName}</div>
+                    <div class="skill-name">${skill.name}</div>
                     <div class="skill-level">
                         <div class="skill-progress" style="width: ${skill.level}%"></div>
                     </div>
@@ -658,6 +642,8 @@ function initRevealAnimations() {
 
 // ===== Инициализация при загрузке страницы =====
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM загружен, инициализация...'); // Для отладки
+    
     initParticles();
     loadSavedLanguage();
     initThemeToggle();
@@ -669,20 +655,15 @@ document.addEventListener('DOMContentLoaded', () => {
     animateStats();
     initSmoothScroll();
     initRevealAnimations();
-    
-    // Переводим навыки при смене языка (если нужно обновлять названия в skill-card)
-    document.addEventListener('languageChanged', () => {
-        if (typeof renderSkills === 'function') {
-            const activeFilter = document.querySelector('.filter-btn.active')?.getAttribute('data-filter') || 'all';
-            renderSkills(activeFilter);
-        }
-    });
 });
 
 // Очистка при размонтировании
 window.addEventListener('beforeunload', () => {
     if (animationFrame) {
         cancelAnimationFrame(animationFrame);
+    }
+    if (typedInstance) {
+        clearTimeout(typedInstance);
     }
 });
 
