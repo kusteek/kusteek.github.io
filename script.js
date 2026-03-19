@@ -1,4 +1,3 @@
-// ===== Particles.js Effect =====
 class ParticlesNetwork {
     constructor(canvasId) {
         this.canvas = document.getElementById(canvasId);
@@ -109,7 +108,6 @@ class ParticlesNetwork {
     }
 }
 
-// ===== Typed Text Effect =====
 class TypedText {
     constructor(elementClass, words) {
         this.element = document.querySelector(elementClass);
@@ -148,7 +146,6 @@ class TypedText {
     }
 }
 
-// ===== Theme Toggle =====
 class ThemeManager {
     constructor() {
         this.themeToggle = document.getElementById('themeToggle');
@@ -194,7 +191,6 @@ class ThemeManager {
     }
 }
 
-// ===== Language Manager =====
 class LanguageManager {
     constructor() {
         this.langToggle = document.getElementById('languageToggle');
