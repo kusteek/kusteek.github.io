@@ -73,49 +73,174 @@
                         <span class="stat-number" data-target="2">2</span>
                         <span class="stat-label" data-i18n="years">Года опыта</span>
                     </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="200">200+</span>
+                        <span class="stat-label" data-i18n="bugs">багов</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="5">5</span>
+                        <span class="stat-label" data-i18n="projects">проектов</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="floating-card">
+                    <i class="fas fa-bug"></i>
+                    <span data-i18n="bug_hunter">Bug Hunter</span>
+                </div>
+                <div class="floating-card card-2">
+                    <i class="fas fa-robot"></i>
+                    <span data-i18n="auto_qa">Auto QA</span>
+                </div>
+                <div class="floating-card card-3">
+                    <i class="fas fa-shield-alt"></i>
+                    <span data-i18n="quality">Quality</span>
+                </div>
+                <div class="profile-circle">
+                    <div class="profile-img">
+                        <img src="https://via.placeholder.com/400" alt="Profile">
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Обо мне -->
         <section id="about" class="about">
-            <div class="section-header">
-                <span class="section-subtitle" data-i18n="about_me_sub">Кто я</span>
-                <h2 class="section-title" data-i18n="about_title">Обо мне</h2>
-            </div>
-            <div style="max-width:800px; margin:0 auto; text-align:center">
-                <p>QA инженер с аналитическим складом ума, люблю находить сложные баги и автоматизировать рутину. Постоянно учусь новому.</p>
+            <div class="about-content">
+                <div class="about-text">
+                    <div class="quote-wrapper">
+                        <i class="fas fa-quote-left quote-icon"></i>
+                        <p class="highlight-text" data-i18n="about_highlight">
+                            QA-инженер, стремящийся к совершенству в обеспечении качества
+                        </p>
+                    </div>
+                    
+                    <div class="about-description">
+                        <p data-i18n="about_text">
+                            За 2 года работы в IT участвовал в тестировании различных проектов. 
+                            Постоянно учусь новому, слежу за трендами в тестировании и применяю 
+                            современные подходы в работе.
+                        </p>
+                        <div class="about-highlights">
+                            <div class="highlight-item">
+                                <span class="highlight-number">5+</span>
+                                <span class="highlight-label" data-i18n="projects_count">Проектов</span>
+                            </div>
+                            <div class="highlight-item">
+                                <span class="highlight-number">200+</span>
+                                <span class="highlight-label" data-i18n="bugs_count">Найденных багов</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-cards">
+                    <div class="info-card">
+                        <div class="card-icon">
+                            <i class="fas fa-map-pin"></i>
+                        </div>
+                        <h3 data-i18n="location">Локация</h3>
+                        <p>Новосибирск, Россия</p>
+                        <div class="card-decoration"></div>
+                    </div>
+                    <div class="info-card">
+                        <div class="card-icon">
+                            <i class="fas fa-language"></i>
+                        </div>
+                        <h3 data-i18n="languages">Языки</h3>
+                        <p data-i18n="russian">Русский (Native)</p>
+                        <p data-i18n="english">English (B1 - Intermediate)</p>
+                        <div class="card-decoration"></div>
+                    </div>
+                    <div class="info-card">
+                        <div class="card-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3 data-i18n="interests">Интересы</h3>
+                        <div class="interests-list">
+                            <span class="interest-item"><i class="fas fa-book"></i> <span data-i18n="interest_1">Изучение новых технологий</span></span>
+                            <span class="interest-item"><i class="fas fa-robot"></i> <span data-i18n="interest_2">Автоматизация всего</span></span>
+                            <span class="interest-item"><i class="fas fa-chart-line"></i> <span data-i18n="interest_3">Оптимизация процессов</span></span>
+                            <span class="interest-item"><i class="fas fa-lightbulb"></i> <span data-i18n="interest_4">Поиск нестандартных решений</span></span>
+                            <span class="interest-item"><i class="fas fa-bullseye"></i> <span data-i18n="interest_5">Постоянное саморазвитие</span></span>
+                        </div>
+                        <div class="card-decoration"></div>
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- Навыки -->
         <section id="skills" class="skills">
             <div class="section-header">
-                <span class="section-subtitle" data-i18n="my_skills">Технологии</span>
-                <h2 class="section-title" data-i18n="skills_title">Навыки</h2>
+                <span class="section-subtitle" data-i18n="what_i_can">Что я умею</span>
+                <h2 class="section-title" data-i18n="skills">Навыки</h2>
             </div>
+            
+            <div class="skills-filter">
+                <button class="filter-btn active" data-filter="all" data-i18n="all">Все</button>
+                <button class="filter-btn" data-filter="automation" data-i18n="automation">Автоматизация</button>
+                <button class="filter-btn" data-filter="manual" data-i18n="manual">Ручное тестирование</button>
+                <button class="filter-btn" data-filter="tools" data-i18n="tools">Инструменты</button>
+            </div>
+
             <div class="skills-grid" id="skillsGrid"></div>
         </section>
 
-        <!-- Опыт -->
+        <!-- Опыт работы -->
         <section id="experience" class="experience">
             <div class="section-header">
-                <span class="section-subtitle" data-i18n="my_exp">Карьера</span>
-                <h2 class="section-title" data-i18n="exp_title">Опыт работы</h2>
+                <span class="section-subtitle" data-i18n="career_path">Карьерный путь</span>
+                <h2 class="section-title" data-i18n="experience">Опыт работы</h2>
             </div>
+            
             <div class="timeline">
+                <!-- ВТБ Опыт -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2024 — 2026</div>
+                    <div class="timeline-content">
+                        <div class="company-logo">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h3>QA Engineer</h3>
+                        <h4>ВТБ · Полный день</h4>
+                        <ul class="experience-list">
+                            <li><i class="fas fa-bug"></i> <span data-i18n="vtb_1">Проектирование и планирование тестирования</span></li>
+                            <li><i class="fas fa-flask"></i> <span data-i18n="vtb_2">Выполнение комплексного тестирования (функциональное, регрессионное, smoke и т.д.)</span></li>
+                            <li><i class="fas fa-shield-alt"></i> <span data-i18n="vtb_3">Управление дефектами и отслеживание качества</span></li>
+                            <li><i class="fas fa-database"></i> <span data-i18n="vtb_4">Работа с тестовыми данными и тестовым окружением</span></li>
+                            <li><i class="fas fa-chart-line"></i> <span data-i18n="vtb_5">Отчётность и анализ результатов тестирования</span></li>
+                            <li><i class="fas fa-code-branch"></i> <span data-i18n="vtb_6">Интеграция в процессы разработки</span></li>
+                            <li><i class="fas fa-users"></i> <span data-i18n="vtb_7">Демонстрация функционала заказчику (ПСИ)</span></li>
+                        </ul>
+                        <div class="tech-tags">
+                            <span>Jira</span>
+                            <span>TestRail</span>
+                            <span>Postman</span>
+                            <span>SQL</span>
+                            <span>Git</span>
+                            <span>Java</span>
+                            <span>Selenium</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Неофлекс Опыт -->
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <div class="timeline-date">2024</div>
                     <div class="timeline-content">
+                        <div class="company-logo">
+                            <i class="fas fa-building"></i>
+                        </div>
                         <h3>Стажер → Junior QA</h3>
                         <h4>Неофлекс · 4 месяца</h4>
                         <ul class="experience-list">
-                            <li><i class="fas fa-bug"></i> <span>Проектирование и планирование тестирования</span></li>
-                            <li><i class="fas fa-flask"></i> <span>Выполнение комплексного тестирования</span></li>
-                            <li><i class="fas fa-shield-alt"></i> <span>Управление дефектами и отслеживание качества</span></li>
-                            <li><i class="fas fa-database"></i> <span>Работа с тестовыми данными</span></li>
-                            <li><i class="fas fa-chart-line"></i> <span>Отчётность и анализ результатов</span></li>
+                            <li><i class="fas fa-bug"></i> <span data-i18n="neoflex_1">Проектирование и планирование тестирования</span></li>
+                            <li><i class="fas fa-flask"></i> <span data-i18n="neoflex_2">Выполнение комплексного тестирования</span></li>
+                            <li><i class="fas fa-shield-alt"></i> <span data-i18n="neoflex_3">Управление дефектами и отслеживание качества</span></li>
+                            <li><i class="fas fa-database"></i> <span data-i18n="neoflex_4">Работа с тестовыми данными</span></li>
+                            <li><i class="fas fa-chart-line"></i> <span data-i18n="neoflex_5">Отчётность и анализ результатов</span></li>
                         </ul>
                         <div class="tech-tags">
                             <span>Jira</span>
@@ -134,14 +259,19 @@
                 <span class="section-subtitle" data-i18n="my_projects">Мои работы</span>
                 <h2 class="section-title" data-i18n="projects_title">Проекты</h2>
             </div>
+
             <div class="projects-grid">
+                <!-- Проект Tutu.ru -->
                 <div class="project-card" onclick="window.open('https://github.com/kusteek/tutu-qa-project', '_blank')">
                     <div class="project-icon">
                         <i class="fas fa-train"></i>
                     </div>
                     <div class="project-content">
-                        <h3>Автоматизированное тестирование Tutu.ru</h3>
-                        <p>Разработка фреймворка для автоматизации тестирования веб-приложения. UI + API тесты с отчетами.</p>
+                        <h3 data-i18n="project_title">Автоматизированное тестирование Tutu.ru</h3>
+                        <p class="project-description" data-i18n="project_desc">
+                            Разработка фреймворка для автоматизации тестирования веб-приложения Tutu.ru. 
+                            Включает UI и API тесты с генерацией отчетов.
+                        </p>
                         <div class="project-tech">
                             <span>Java</span>
                             <span>Selenium</span>
@@ -153,6 +283,9 @@
                             <i class="fab fa-github"></i>
                             <span>github.com/kusteek/tutu-qa-project</span>
                         </div>
+                        <div class="project-hover">
+                            <span data-i18n="open_github">Открыть на GitHub →</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -161,9 +294,12 @@
         <!-- Призыв к действию -->
         <section class="cta-section">
             <div class="cta-content">
-                <h2>Открыт к предложениям!</h2>
-                <p>Готов применять свои навыки и развиваться в новой команде</p>
-                <a href="#contact" class="btn btn-primary btn-large">Написать мне <i class="fas fa-paper-plane"></i></a>
+                <h2 data-i18n="cta_title">Открыт к предложениям!</h2>
+                <p data-i18n="cta_text">Готов применять свои навыки и развиваться в новой команде</p>
+                <a href="#contact" class="btn btn-primary btn-large">
+                    <span data-i18n="cta_button">Написать мне</span>
+                    <i class="fas fa-paper-plane"></i>
+                </a>
             </div>
         </section>
 
@@ -173,6 +309,7 @@
                 <span class="section-subtitle" data-i18n="get_in_touch">Свяжитесь со мной</span>
                 <h2 class="section-title" data-i18n="contacts">Контакты</h2>
             </div>
+
             <div class="contact-content">
                 <div class="contact-info">
                     <div class="contact-card" onclick="window.location.href='mailto:lol.kleka2000@mail.ru'">
@@ -201,15 +338,18 @@
                         </div>
                         <h3>GitHub</h3>
                         <span>@kusteek</span>
+                        <div class="github-stats">
+                            <span>⭐ 5 репозиториев</span>
+                        </div>
                     </div>
 
                     <div class="contact-card">
                         <div class="contact-icon">
                             <i class="fas fa-map-marker-alt"></i>
                         </div>
-                        <h3>Локация</h3>
+                        <h3 data-i18n="location">Локация</h3>
                         <span>Новосибирск</span>
-                        <span>UTC+7</span>
+                        <span class="stats">UTC+7</span>
                     </div>
                 </div>
             </div>
@@ -218,9 +358,9 @@
 
     <footer>
         <div class="footer-content">
-            <p>© 2026 Клёк Артём - QA Инженер</p>
+            <p>© 2026 Клёк Артём - <span data-i18n="qa_engineer">QA Инженер</span></p>
             <div class="made-with">
-                <span>Сделано с ❤️ в Новосибирске</span>
+                <span data-i18n="made_with">Сделано с ❤️ в Новосибирске</span>
             </div>
         </div>
     </footer>
