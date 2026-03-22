@@ -276,9 +276,14 @@ function copyToClipboard(text) {
         z-index: 10000;
         font-weight: 500;
         box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        animation: slideUp 0.3s ease;
     `;
     document.body.appendChild(notification);
-    setTimeout(() => notification.remove(), 2000);
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 2000);
 }
 
 // ===== Initialize Everything =====
@@ -301,3 +306,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// Add slideUp animation keyframes if not exists
+if (!document.querySelector('#dynamic-styles')) {
+    const style = document.createElement('style');
+    style.id = 'dynamic-styles';
+    style.textContent = `
+        @keyframes slideUp {
+            from {
+                transform: translate(-50%, 20px);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}
